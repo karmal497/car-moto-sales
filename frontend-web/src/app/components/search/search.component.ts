@@ -1,3 +1,4 @@
+// search.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -57,14 +58,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchQuery = '';
   searchResults: Vehicle[] = [];
   isLoading = false;
-  selectedType = 'all';
-  private destroy$ = new Subject<void>();
 
-  typeOptions = [
-    { value: 'all', label: 'Todos los vehículos' },
-    { value: 'cars', label: 'Solo autos' },
-    { value: 'motorcycles', label: 'Solo motos' }
-  ];
+  private destroy$ = new Subject<void>();
 
   constructor(private apiService: ApiService, private router: Router) {}
 
@@ -75,6 +70,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  navigateToCars(): void {
+    this.router.navigate(['/cars']);
+  }
+
+  navigateToMotorcycles(): void {
+    this.router.navigate(['/motorcycles']);
+  }
+
   search(): void {
     if (!this.searchQuery.trim()) {
       this.searchResults = [];
@@ -82,26 +85,19 @@ export class SearchComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = true;
-    this.apiService.search(this.searchQuery, this.selectedType)
+    this.apiService.search(this.searchQuery, 'all')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (results: any) => {
-          // Process results based on type
-          if (this.selectedType === 'all') {
-            // Combine cars and motorcycles
-            const cars = results.cars || [];
-            const motorcycles = results.motorcycles || [];
+          // Combine cars and motorcycles
+          const cars = results.cars || [];
+          const motorcycles = results.motorcycles || [];
 
-            // Add type property to distinguish between vehicles
-            this.searchResults = [
-              ...cars.map((car: any) => ({ ...car, type: 'car' })),
-              ...motorcycles.map((motorcycle: any) => ({ ...motorcycle, type: 'motorcycle' }))
-            ];
-          } else if (this.selectedType === 'cars') {
-            this.searchResults = results.map((car: any) => ({ ...car, type: 'car' }));
-          } else if (this.selectedType === 'motorcycles') {
-            this.searchResults = results.map((motorcycle: any) => ({ ...motorcycle, type: 'motorcycle' }));
-          }
+          // Add type property to distinguish between vehicles
+          this.searchResults = [
+            ...cars.map((car: any) => ({ ...car, type: 'car' })),
+            ...motorcycles.map((motorcycle: any) => ({ ...motorcycle, type: 'motorcycle' }))
+          ];
 
           this.isLoading = false;
         },
@@ -110,6 +106,11 @@ export class SearchComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         }
       });
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searchResults = [];
   }
 
   viewVehicleDetails(vehicle: Vehicle): void {

@@ -3,101 +3,137 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #000000 0%, #ff7700 100%);
   padding: 20px;
   position: relative;
   overflow: hidden;
 }
 
-.login-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 24px;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-.full-width {
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-.login-button {
-  height: 48px;
-  font-size: 16px;
-  margin-top: 16px;
-}
-
-.register-link {
-  text-align: center;
-  width: 100%;
-}
-
-.register-link a {
-  color: #3f51b5;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.register-link a:hover {
-  text-decoration: underline;
-}
-
-.login-background {
+.login-container::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1535732820275-9ffd998cac22?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
   z-index: 1;
 }
 
-.floating-car, .floating-motorcycle {
-  position: absolute;
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.1;
-  animation: float 6s ease-in-out infinite;
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 32px;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(255, 119, 0, 0.3);
+  border: 1px solid rgba(255, 119, 0, 0.2);
+  color: #fff;
 }
 
-.floating-car {
-  width: 300px;
-  height: 150px;
-  background-image: url('../../../../assets/images/car-silhouette.png');
-  top: 20%;
-  left: 10%;
-  animation-delay: 0s;
+.login-card mat-card-title {
+  color: #ff7700;
+  font-weight: 600;
+  font-size: 28px;
+  margin-bottom: 8px;
 }
 
-.floating-motorcycle {
-  width: 200px;
-  height: 120px;
-  background-image: url('../../../../assets/images/motorcycle-silhouette.png');
-  bottom: 20%;
-  right: 10%;
-  animation-delay: 2s;
+.login-card mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(2deg);
-  }
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.login-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #ff7700 0%, #ff5500 100%);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 119, 0, 0.4);
+}
+
+.login-button:disabled {
+  background: rgba(255, 119, 0, 0.5);
+}
+
+.register-link {
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.register-link p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.register-link a {
+  color: #ff7700;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+  color: #ff9900;
+}
+
+/* Estilos para los campos de formulario */
+::ng-deep .login-card .mat-form-field-label {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+::ng-deep .login-card .mat-form-field-outline {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+::ng-deep .login-card .mat-input-element {
+  color: #ffffff !important;
+}
+
+::ng-deep .login-card .mat-form-field-outline-thick {
+  color: #ff7700 !important;
+}
+
+::ng-deep .login-card .mat-form-field.mat-focused .mat-form-field-label {
+  color: #ff7700 !important;
+}
+
+/* Iconos */
+::ng-deep .login-card .mat-icon {
+  color: #ff7700;
+}
+
+/* Spinner */
+::ng-deep .login-button .mat-progress-spinner circle {
+  stroke: #ffffff;
 }
 
 /* Responsive Design */
 @media (max-width: 480px) {
   .login-card {
     margin: 20px;
-    padding: 20px;
+    padding: 24px;
   }
 
-  .floating-car, .floating-motorcycle {
-    display: none;
+  .login-card mat-card-title {
+    font-size: 24px;
   }
 }

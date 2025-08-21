@@ -1,117 +1,142 @@
+<!-- search.component.html -->
 <div class="search-container">
-  <div class="search-header">
-    <h1>Búsqueda de Vehículos</h1>
-    <p>Encuentra el auto o moto perfecto para ti</p>
-  </div>
+  <!-- Hero Section con imagen dividida diagonal -->
+  <div class="gallery-hero">
+    <div class="hero-overlay">
+      <h1>Vehículos Premium</h1>
+      <p>Descubre nuestra colección exclusiva de autos y motos</p>
+    </div>
 
-  <!-- Search Input -->
-  <mat-card class="search-card">
-    <mat-card-content>
-      <div class="search-input-container">
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>¿Qué estás buscando?</mat-label>
-          <input matInput [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Marca, modelo, características...">
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="type-field">
-          <mat-label>Tipo de vehículo</mat-label>
-          <mat-select [(ngModel)]="selectedType">
-            <mat-option *ngFor="let option of typeOptions" [value]="option.value">
-              {{ option.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <button mat-raised-button color="primary" (click)="search()" [disabled]="!searchQuery">
-          <mat-icon>search</mat-icon>
-          Buscar
-        </button>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Results -->
-  <div *ngIf="isLoading" class="loading-state">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>Buscando vehículos...</p>
-  </div>
-
-  <div *ngIf="!isLoading && searchResults.length > 0" class="results-section">
-    <h2>Resultados de búsqueda ({{ searchResults.length }})</h2>
-
-    <div class="results-grid">
-      <mat-card
-        *ngFor="let vehicle of searchResults"
-        class="vehicle-card card-3d"
-        (click)="viewVehicleDetails(vehicle)">
-
-        <div class="vehicle-image-container">
-          <img
-            [src]="vehicle.image_url || (vehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg')"
-            [alt]="vehicle.title"
-            class="vehicle-image"
-            (error)="vehicle.image_url = vehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg'">
-
-          <div class="vehicle-badge" [class.sold]="vehicle.is_sold">
-            {{ vehicle.is_sold ? 'Vendido' : 'Disponible' }}
-          </div>
-
-          <div class="vehicle-type-badge">
-            {{ vehicle.type === 'car' ? 'Auto' : 'Moto' }}
+    <!-- Imágenes divididas con línea diagonal -->
+    <div class="split-container">
+      <div class="split-section car-section" (click)="navigateToCars()">
+        <div class="image-overlay">
+          <div class="promo-text">
+            <h3>Autos Exclusivos</h3>
+            <p>Descubre nuestra colección premium de vehículos</p>
+            <button mat-raised-button color="primary">Ver Galería</button>
           </div>
         </div>
+      </div>
 
-        <mat-card-content>
-          <h3 class="vehicle-title">{{ vehicle.brand }} {{ vehicle.model }}</h3>
-          <p class="vehicle-year">{{ vehicle.year }}</p>
-
-          <div class="vehicle-details">
-            <div class="vehicle-detail">
-              <mat-icon>color_lens</mat-icon>
-              <span>{{ vehicle.color }}</span>
-            </div>
-
-            <div class="vehicle-detail" *ngIf="vehicle.type === 'car' && vehicle.transmission">
-              <mat-icon>settings</mat-icon>
-              <span>{{ getTransmissionLabel(vehicle.transmission) }}</span>
-            </div>
-
-            <div class="vehicle-detail" *ngIf="vehicle.type === 'motorcycle' && vehicle.category">
-              <mat-icon>category</mat-icon>
-              <span>{{ getCategoryLabel(vehicle.category) }}</span>
-            </div>
-
-            <div class="vehicle-detail">
-              <mat-icon>speed</mat-icon>
-              <span>{{ formatNumber(vehicle.mileage) }} km</span>
-            </div>
+      <div class="split-section motorcycle-section" (click)="navigateToMotorcycles()">
+        <div class="image-overlay">
+          <div class="promo-text">
+            <h3>Motos Premium</h3>
+            <p>Explora nuestras motocicletas de alta gama</p>
+            <button mat-raised-button color="primary">Ver Colección</button>
           </div>
-
-          <div class="vehicle-price">
-            <span class="price-amount">${{ formatNumber(vehicle.price) }}</span>
-            <span class="price-label">Precio</span>
-          </div>
-        </mat-card-content>
-
-        <mat-card-actions>
-          <button mat-button color="primary" class="full-width-btn">
-            Ver Detalles
-          </button>
-        </mat-card-actions>
-      </mat-card>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div *ngIf="!isLoading && searchQuery && searchResults.length === 0" class="no-results">
-    <mat-icon>search_off</mat-icon>
-    <h3>No se encontraron resultados</h3>
-    <p>Intenta con otros términos de búsqueda</p>
+  <!-- Barra de búsqueda (reubicada) -->
+  <div class="search-section">
+    <div class="search-box-container">
+      <div class="search-box">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          type="text"
+          placeholder="Buscar por marca, modelo, año..."
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="search()"
+          class="search-input">
+        <button mat-raised-button color="accent" class="search-btn" (click)="search()">
+          Buscar
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div *ngIf="!isLoading && !searchQuery" class="search-prompt">
-    <mat-icon>search</mat-icon>
-    <h3>Busca autos y motos</h3>
-    <p>Ingresa palabras clave como marca, modelo, año o características para encontrar vehículos</p>
+  <!-- Results Count -->
+  <div class="results-count">
+    <p *ngIf="!isLoading">
+      {{ searchResults.length }} vehículos encontrados
+    </p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Buscando en nuestra flota...</p>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!isLoading && searchQuery && searchResults.length === 0" class="no-results">
+    <mat-icon>search_off</mat-icon>
+    <h3>No se encontraron vehículos</h3>
+    <p>Intenta con otros términos de búsqueda o ajusta los filtros</p>
+    <button mat-raised-button color="primary" (click)="clearSearch()">Mostrar todos</button>
+  </div>
+
+  <!-- Search Prompt -->
+  <div *ngIf="!isLoading && !searchQuery && searchResults.length === 0" class="search-prompt">
+    <mat-icon>directions_car</mat-icon>
+    <mat-icon class="prompt-icon">two_wheeler</mat-icon>
+    <h3>Explora nuestro inventario</h3>
+    <p>Busca por marca, modelo o características para encontrar el vehículo perfecto</p>
+  </div>
+
+  <!-- Results Grid -->
+  <div *ngIf="!isLoading && searchResults.length > 0" class="vehicles-grid">
+    <div
+      *ngFor="let vehicle of searchResults"
+      class="vehicle-card"
+      (click)="viewVehicleDetails(vehicle)">
+
+      <div class="vehicle-image-container">
+        <img
+          [src]="vehicle.image_url || (vehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg')"
+          [alt]="vehicle.title"
+          class="vehicle-image"
+          (error)="vehicle.image_url = vehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg'">
+
+        <div class="vehicle-badge" [class.sold]="vehicle.is_sold">
+          {{ vehicle.is_sold ? 'Vendido' : 'Disponible' }}
+        </div>
+
+        <div class="vehicle-type-badge" [class.car]="vehicle.type === 'car'" [class.motorcycle]="vehicle.type === 'motorcycle'">
+          {{ vehicle.type === 'car' ? 'Auto' : 'Moto' }}
+        </div>
+
+        <div class="vehicle-overlay">
+          <button mat-icon-button class="view-details-btn">
+            <mat-icon>visibility</mat-icon>
+            Ver Detalles
+          </button>
+        </div>
+      </div>
+
+      <div class="vehicle-content">
+        <h3 class="vehicle-title">{{ vehicle.brand }} {{ vehicle.model }}</h3>
+        <p class="vehicle-year">{{ vehicle.year }} • {{ vehicle.type === 'car' ? (vehicle.transmission ? getTransmissionLabel(vehicle.transmission) : 'N/A') : (vehicle.category ? getCategoryLabel(vehicle.category) : 'N/A') }}</p>
+
+        <div class="vehicle-specs">
+          <div class="spec-item">
+            <mat-icon>speed</mat-icon>
+            <span>{{ formatNumber(vehicle.mileage) }} km</span>
+          </div>
+          <div class="spec-item">
+            <mat-icon>local_gas_station</mat-icon>
+            <span>{{ vehicle.fuel_type }}</span>
+          </div>
+          <div class="spec-item">
+            <mat-icon>color_lens</mat-icon>
+            <span>{{ vehicle.color }}</span>
+          </div>
+        </div>
+
+        <div class="vehicle-price">
+          <span class="price-amount">${{ formatNumber(vehicle.price) }}</span>
+          <span class="price-label">Precio especial</span>
+        </div>
+
+        <button mat-button class="inquiry-btn">
+          <mat-icon>{{ vehicle.type === 'car' ? 'car_rental' : 'two_wheeler' }}</mat-icon>
+          Solicitar Prueba
+        </button>
+      </div>
+    </div>
   </div>
 </div>

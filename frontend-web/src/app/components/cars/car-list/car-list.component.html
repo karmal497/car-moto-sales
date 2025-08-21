@@ -1,115 +1,63 @@
-<div class="cars-container">
-  <div class="cars-header">
-    <h1>Catálogo de Autos</h1>
-    <p>Descubre nuestra amplia selección de vehículos de alta calidad</p>
-  </div>
+<!-- car-list.component.html -->
+<div class="cars-gallery-container">
+  <!-- Hero Section -->
+  <div class="gallery-hero">
+    <div class="hero-overlay">
+      <h1>Galería de Autos Exclusivos</h1>
+      <p>Descubre nuestra colección premium de vehículos</p>
 
-  <!-- Filters Section -->
-  <mat-card class="filters-card">
-    <div class="filters-header">
-      <h3>Filtros de Búsqueda</h3>
-      <button mat-button color="warn" (click)="clearFilters()">
-        <mat-icon>clear</mat-icon>
-        Limpiar Filtros
-      </button>
-    </div>
-
-    <div class="filters-grid">
-      <!-- Search Input -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Buscar autos...</mat-label>
-        <input matInput [(ngModel)]="searchTerm" (ngModelChange)="filterCars()" placeholder="Marca, modelo, descripción...">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-
-      <!-- Brand Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Marca</mat-label>
-        <mat-select [(ngModel)]="selectedBrand" (ngModelChange)="filterCars()">
-          <mat-option value="">Todas las marcas</mat-option>
-          <mat-option *ngFor="let brand of brands" [value]="brand">
-            {{ brand }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Year Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Año</mat-label>
-        <mat-select [(ngModel)]="selectedYear" (ngModelChange)="filterCars()">
-          <mat-option value="">Todos los años</mat-option>
-          <mat-option *ngFor="let year of years" [value]="year.toString()">
-            {{ year }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Transmission Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Transmisión</mat-label>
-        <mat-select [(ngModel)]="selectedTransmission" (ngModelChange)="filterCars()">
-          <mat-option value="">Todos los tipos</mat-option>
-          <mat-option *ngFor="let option of transmissionOptions" [value]="option.value">
-            {{ option.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Price Range -->
-      <div class="price-range">
-        <mat-form-field appearance="outline" class="price-field">
-          <mat-label>Precio Mínimo</mat-label>
-          <input matInput type="number" [(ngModel)]="minPrice" (ngModelChange)="filterCars()" placeholder="0">
-          <span matPrefix>$&nbsp;</span>
-        </mat-form-field>
-
-        <span class="price-separator">-</span>
-
-        <mat-form-field appearance="outline" class="price-field">
-          <mat-label>Precio Máximo</mat-label>
-          <input matInput type="number" [(ngModel)]="maxPrice" (ngModelChange)="filterCars()" placeholder="100000">
-          <span matPrefix>$&nbsp;</span>
-        </mat-form-field>
+      <!-- Search Bar -->
+      <div class="hero-search-container">
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input
+            type="text"
+            placeholder="Buscar por marca, modelo, año..."
+            [(ngModel)]="searchTerm"
+            (input)="filterCars()"
+            class="search-input">
+          <button mat-raised-button color="accent" class="search-btn" (click)="filterCars()">
+            Buscar
+          </button>
+        </div>
       </div>
     </div>
-  </mat-card>
+  </div>
 
   <!-- Results Count -->
   <div class="results-count">
     <p *ngIf="!isLoading">
-      Mostrando {{ filteredCars.length }} de {{ cars.length }} autos
+      {{ filteredCars.length }} autos disponibles en nuestra flota
     </p>
   </div>
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-state">
     <mat-spinner diameter="50"></mat-spinner>
-    <p>Cargando autos...</p>
+    <p>Cargando nuestra colección exclusiva...</p>
   </div>
 
   <!-- No Results -->
   <div *ngIf="!isLoading && filteredCars.length === 0" class="no-results">
-    <mat-icon>search_off</mat-icon>
-    <h3>No se encontraron autos</h3>
-    <p>Intenta ajustar los filtros de búsqueda</p>
-    <button mat-raised-button color="primary" (click)="clearFilters()">
-      Mostrar todos los autos
-    </button>
+    <mat-icon>directions_car</mat-icon>
+    <h3>No se encontraron vehículos</h3>
+    <p>Intenta con otros términos de búsqueda</p>
+    <button mat-raised-button color="primary" (click)="clearSearch()">Mostrar todos</button>
   </div>
 
   <!-- Cars Grid -->
-  <div *ngIf="!isLoading && filteredCars.length > 0" class="cars-grid">
-    <mat-card
+  <div *ngIf="!isLoading && filteredCars.length > 0" class="exclusive-cars-grid">
+    <div
       *ngFor="let car of filteredCars"
-      class="car-card card-3d"
+      class="exclusive-car-card"
       (click)="viewCarDetails(car.id)">
 
       <div class="car-image-container">
         <img
-          [src]="car.image_url || 'assets/images/car-placeholder.jpg'"
+          [src]="car.image_url || getRandomCarImage()"
           [alt]="car.title"
           class="car-image"
-          (error)="car.image_url = 'assets/images/car-placeholder.jpg'">
+          (error)="car.image_url = getRandomCarImage()">
 
         <div class="car-badge" [class.sold]="car.is_sold">
           {{ car.is_sold ? 'Vendido' : 'Disponible' }}
@@ -118,24 +66,25 @@
         <div class="car-overlay">
           <button mat-icon-button class="view-details-btn">
             <mat-icon>visibility</mat-icon>
+            Ver Detalles
           </button>
         </div>
       </div>
 
-      <mat-card-content>
+      <div class="car-content">
         <h3 class="car-title">{{ car.brand }} {{ car.model }}</h3>
-        <p class="car-year">{{ car.year }}</p>
+        <p class="car-year">{{ car.year }} • {{ getTransmissionLabel(car.transmission) }}</p>
 
-        <div class="car-details">
-          <div class="car-detail">
-            <mat-icon>settings</mat-icon>
-            <span>{{ getTransmissionLabel(car.transmission) }}</span>
-          </div>
-          <div class="car-detail">
+        <div class="car-specs">
+          <div class="spec-item">
             <mat-icon>speed</mat-icon>
             <span>{{ formatNumber(car.mileage) }} km</span>
           </div>
-          <div class="car-detail">
+          <div class="spec-item">
+            <mat-icon>local_gas_station</mat-icon>
+            <span>{{ car.fuel_type }}</span>
+          </div>
+          <div class="spec-item">
             <mat-icon>color_lens</mat-icon>
             <span>{{ car.color }}</span>
           </div>
@@ -143,15 +92,14 @@
 
         <div class="car-price">
           <span class="price-amount">${{ formatNumber(car.price) }}</span>
-          <span class="price-label">Precio</span>
+          <span class="price-label">Precio especial</span>
         </div>
-      </mat-card-content>
 
-      <mat-card-actions>
-        <button mat-button color="primary" class="full-width-btn">
-          Ver Detalles
+        <button mat-button class="inquiry-btn">
+          <mat-icon>car_rental</mat-icon>
+          Solicitar Prueba de Manejo
         </button>
-      </mat-card-actions>
-    </mat-card>
+      </div>
+    </div>
   </div>
 </div>

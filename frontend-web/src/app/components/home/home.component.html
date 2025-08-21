@@ -4,13 +4,12 @@
     <p class="hero-subtitle">Explora nuestra amplia selección de vehículos de alta calidad</p>
     <button mat-raised-button color="accent" routerLink="/search">Explorar Vehículos</button>
   </div>
-  <div id="three-container" class="three-container"></div>
 </div>
 
 <div class="featured-section fade-in">
   <h2>Autos Destacados</h2>
   <div class="vehicle-grid">
-    <mat-card *ngFor="let car of featuredCars" class="card-3d vehicle-card">
+    <mat-card *ngFor="let car of featuredCars" class="vehicle-card">
       <img mat-card-image [src]="car.image_url || 'assets/images/car-placeholder.jpg'" alt="{{car.title}}" class="vehicle-image">
       <mat-card-content>
         <h3>{{car.brand}} {{car.model}}</h3>
@@ -28,7 +27,7 @@
 <div class="featured-section fade-in">
   <h2>Motos Destacadas</h2>
   <div class="vehicle-grid">
-    <mat-card *ngFor="let motorcycle of featuredMotorcycles" class="card-3d vehicle-card">
+    <mat-card *ngFor="let motorcycle of featuredMotorcycles" class="vehicle-card">
       <img mat-card-image [src]="motorcycle.image_url || 'assets/images/motorcycle-placeholder.jpg'" alt="{{motorcycle.title}}" class="vehicle-image">
       <mat-card-content>
         <h3>{{motorcycle.brand}} {{motorcycle.model}}</h3>

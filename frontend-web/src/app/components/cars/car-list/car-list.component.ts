@@ -1,3 +1,4 @@
+// car-list.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -59,14 +60,21 @@ export class CarListComponent implements OnInit, OnDestroy {
   filteredCars: Car[] = [];
   isLoading = true;
   searchTerm = '';
-  selectedBrand = '';
-  selectedYear = '';
-  selectedTransmission = '';
-  minPrice = '';
-  maxPrice = '';
 
-  brands: string[] = [];
-  years: number[] = [];
+  // Array of real car images from Unsplash
+  carImages: string[] = [
+    'https://images.unsplash.com/photo-1542362567-b07e54358753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    'https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2025&q=80',
+    'https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80',
+    'https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
+    'https://images.unsplash.com/photo-1601268859287-9cec8a74e9f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80',
+    'https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80',
+    'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'
+  ];
+
   private destroy$ = new Subject<void>();
 
   // Transmission options
@@ -95,7 +103,6 @@ export class CarListComponent implements OnInit, OnDestroy {
         next: (cars: Car[]) => {
           this.cars = cars;
           this.filteredCars = cars;
-          this.extractBrandsAndYears();
           this.isLoading = false;
         },
         error: (error) => {
@@ -105,51 +112,28 @@ export class CarListComponent implements OnInit, OnDestroy {
       });
   }
 
-  extractBrandsAndYears(): void {
-    // Extract unique brands
-    this.brands = [...new Set(this.cars.map(car => car.brand))].sort();
-
-    // Extract unique years (last 30 years)
-    const currentYear = new Date().getFullYear();
-    this.years = Array.from({ length: 30 }, (_, i) => currentYear - i);
-  }
-
   filterCars(): void {
+    if (!this.searchTerm) {
+      this.filteredCars = this.cars;
+      return;
+    }
+
     this.filteredCars = this.cars.filter(car => {
-      // Search term filter
-      const matchesSearch = !this.searchTerm ||
-        car.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        car.brand.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        car.model.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        car.description.toLowerCase().includes(this.searchTerm.toLowerCase());
-
-      // Brand filter
-      const matchesBrand = !this.selectedBrand || car.brand === this.selectedBrand;
-
-      // Year filter
-      const matchesYear = !this.selectedYear || car.year.toString() === this.selectedYear;
-
-      // Transmission filter
-      const matchesTransmission = !this.selectedTransmission || car.transmission === this.selectedTransmission;
-
-      // Price filter
-      const price = parseFloat(car.price.toString());
-      const min = this.minPrice ? parseFloat(this.minPrice) : 0;
-      const max = this.maxPrice ? parseFloat(this.maxPrice) : Number.MAX_SAFE_INTEGER;
-      const matchesPrice = price >= min && price <= max;
-
-      return matchesSearch && matchesBrand && matchesYear && matchesTransmission && matchesPrice;
+      const searchTerm = this.searchTerm.toLowerCase();
+      return (
+        car.brand.toLowerCase().includes(searchTerm) ||
+        car.model.toLowerCase().includes(searchTerm) ||
+        car.year.toString().includes(searchTerm) ||
+        car.color.toLowerCase().includes(searchTerm) ||
+        car.fuel_type.toLowerCase().includes(searchTerm) ||
+        car.transmission.toLowerCase().includes(searchTerm)
+      );
     });
   }
 
-  clearFilters(): void {
+  clearSearch(): void {
     this.searchTerm = '';
-    this.selectedBrand = '';
-    this.selectedYear = '';
-    this.selectedTransmission = '';
-    this.minPrice = '';
-    this.maxPrice = '';
-    this.filterCars();
+    this.filteredCars = this.cars;
   }
 
   viewCarDetails(carId: number): void {
@@ -159,6 +143,12 @@ export class CarListComponent implements OnInit, OnDestroy {
   getTransmissionLabel(value: string): string {
     const option = this.transmissionOptions.find(opt => opt.value === value);
     return option ? option.label : value;
+  }
+
+  // Get a random car image from our collection
+  getRandomCarImage(): string {
+    const randomIndex = Math.floor(Math.random() * this.carImages.length);
+    return this.carImages[randomIndex];
   }
 
   // Format number without using pipe

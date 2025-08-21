@@ -1,115 +1,63 @@
-<div class="motorcycles-container">
-  <div class="motorcycles-header">
-    <h1>Catálogo de Motos</h1>
-    <p>Descubre nuestra amplia selección de motocicletas de alta calidad</p>
-  </div>
+<!-- motorcycle-list.component.html -->
+<div class="motorcycles-gallery-container">
+  <!-- Hero Section -->
+  <div class="gallery-hero">
+    <div class="hero-overlay">
+      <h1>Galería de Motos Exclusivas</h1>
+      <p>Descubre nuestra colección premium de motocicletas</p>
 
-  <!-- Filters Section -->
-  <mat-card class="filters-card">
-    <div class="filters-header">
-      <h3>Filtros de Búsqueda</h3>
-      <button mat-button color="warn" (click)="clearFilters()">
-        <mat-icon>clear</mat-icon>
-        Limpiar Filtros
-      </button>
-    </div>
-
-    <div class="filters-grid">
-      <!-- Search Input -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Buscar motos...</mat-label>
-        <input matInput [(ngModel)]="searchTerm" (ngModelChange)="filterMotorcycles()" placeholder="Marca, modelo, descripción...">
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-
-      <!-- Brand Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Marca</mat-label>
-        <mat-select [(ngModel)]="selectedBrand" (ngModelChange)="filterMotorcycles()">
-          <mat-option value="">Todas las marcas</mat-option>
-          <mat-option *ngFor="let brand of brands" [value]="brand">
-            {{ brand }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Year Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Año</mat-label>
-        <mat-select [(ngModel)]="selectedYear" (ngModelChange)="filterMotorcycles()">
-          <mat-option value="">Todos los años</mat-option>
-          <mat-option *ngFor="let year of years" [value]="year.toString()">
-            {{ year }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Category Filter -->
-      <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Categoría</mat-label>
-        <mat-select [(ngModel)]="selectedCategory" (ngModelChange)="filterMotorcycles()">
-          <mat-option value="">Todas las categorías</mat-option>
-          <mat-option *ngFor="let option of categoryOptions" [value]="option.value">
-            {{ option.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Price Range -->
-      <div class="price-range">
-        <mat-form-field appearance="outline" class="price-field">
-          <mat-label>Precio Mínimo</mat-label>
-          <input matInput type="number" [(ngModel)]="minPrice" (ngModelChange)="filterMotorcycles()" placeholder="0">
-          <span matPrefix>$&nbsp;</span>
-        </mat-form-field>
-
-        <span class="price-separator">-</span>
-
-        <mat-form-field appearance="outline" class="price-field">
-          <mat-label>Precio Máximo</mat-label>
-          <input matInput type="number" [(ngModel)]="maxPrice" (ngModelChange)="filterMotorcycles()" placeholder="100000">
-          <span matPrefix>$&nbsp;</span>
-        </mat-form-field>
+      <!-- Search Bar -->
+      <div class="hero-search-container">
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input
+            type="text"
+            placeholder="Buscar por marca, modelo, año..."
+            [(ngModel)]="searchTerm"
+            (input)="filterMotorcycles()"
+            class="search-input">
+          <button mat-raised-button color="accent" class="search-btn" (click)="filterMotorcycles()">
+            Buscar
+          </button>
+        </div>
       </div>
     </div>
-  </mat-card>
+  </div>
 
   <!-- Results Count -->
   <div class="results-count">
     <p *ngIf="!isLoading">
-      Mostrando {{ filteredMotorcycles.length }} de {{ motorcycles.length }} motos
+      {{ filteredMotorcycles.length }} motos disponibles en nuestra flota
     </p>
   </div>
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-state">
     <mat-spinner diameter="50"></mat-spinner>
-    <p>Cargando motos...</p>
+    <p>Cargando nuestra colección exclusiva...</p>
   </div>
 
   <!-- No Results -->
   <div *ngIf="!isLoading && filteredMotorcycles.length === 0" class="no-results">
-    <mat-icon>search_off</mat-icon>
-    <h3>No se encontraron motos</h3>
-    <p>Intenta ajustar los filtros de búsqueda</p>
-    <button mat-raised-button color="primary" (click)="clearFilters()">
-      Mostrar todas las motos
-    </button>
+    <mat-icon>two_wheeler</mat-icon>
+    <h3>No se encontraron motocicletas</h3>
+    <p>Intenta con otros términos de búsqueda</p>
+    <button mat-raised-button color="primary" (click)="clearSearch()">Mostrar todas</button>
   </div>
 
   <!-- Motorcycles Grid -->
-  <div *ngIf="!isLoading && filteredMotorcycles.length > 0" class="motorcycles-grid">
-    <mat-card
+  <div *ngIf="!isLoading && filteredMotorcycles.length > 0" class="exclusive-motorcycles-grid">
+    <div
       *ngFor="let motorcycle of filteredMotorcycles"
-      class="motorcycle-card card-3d"
+      class="exclusive-motorcycle-card"
       (click)="viewMotorcycleDetails(motorcycle.id)">
 
       <div class="motorcycle-image-container">
         <img
-          [src]="motorcycle.image_url || 'assets/images/motorcycle-placeholder.jpg'"
+          [src]="motorcycle.image_url || getRandomMotorcycleImage()"
           [alt]="motorcycle.title"
           class="motorcycle-image"
-          (error)="motorcycle.image_url = 'assets/images/motorcycle-placeholder.jpg'">
+          (error)="motorcycle.image_url = getRandomMotorcycleImage()">
 
         <div class="motorcycle-badge" [class.sold]="motorcycle.is_sold">
           {{ motorcycle.is_sold ? 'Vendido' : 'Disponible' }}
@@ -118,44 +66,40 @@
         <div class="motorcycle-overlay">
           <button mat-icon-button class="view-details-btn">
             <mat-icon>visibility</mat-icon>
+            Ver Detalles
           </button>
         </div>
       </div>
 
-      <mat-card-content>
+      <div class="motorcycle-content">
         <h3 class="motorcycle-title">{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
-        <p class="motorcycle-year">{{ motorcycle.year }}</p>
+        <p class="motorcycle-year">{{ motorcycle.year }} • {{ getCategoryLabel(motorcycle.category) }}</p>
 
-        <div class="motorcycle-details">
-          <div class="motorcycle-detail">
-            <mat-icon>category</mat-icon>
-            <span>{{ getCategoryLabel(motorcycle.category) }}</span>
-          </div>
-          <div class="motorcycle-detail">
+        <div class="motorcycle-specs">
+          <div class="spec-item">
             <mat-icon>speed</mat-icon>
             <span>{{ formatNumber(motorcycle.mileage) }} km</span>
           </div>
-          <div class="motorcycle-detail">
-            <mat-icon>color_lens</mat-icon>
-            <span>{{ motorcycle.color }}</span>
-          </div>
-          <div class="motorcycle-detail">
+          <div class="spec-item">
             <mat-icon>local_gas_station</mat-icon>
             <span>{{ motorcycle.fuel_type }}</span>
+          </div>
+          <div class="spec-item">
+            <mat-icon>color_lens</mat-icon>
+            <span>{{ motorcycle.color }}</span>
           </div>
         </div>
 
         <div class="motorcycle-price">
           <span class="price-amount">${{ formatNumber(motorcycle.price) }}</span>
-          <span class="price-label">Precio</span>
+          <span class="price-label">Precio especial</span>
         </div>
-      </mat-card-content>
 
-      <mat-card-actions>
-        <button mat-button color="primary" class="full-width-btn">
-          Ver Detalles
+        <button mat-button class="inquiry-btn">
+          <mat-icon>two_wheeler</mat-icon>
+          Solicitar Prueba de Manejo
         </button>
-      </mat-card-actions>
-    </mat-card>
+      </div>
+    </div>
   </div>
 </div>
