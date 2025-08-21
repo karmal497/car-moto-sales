@@ -1,0 +1,123 @@
+<!-- contact.component.html -->
+<div class="contact-container">
+  <mat-card class="contact-card">
+    <mat-card-header>
+      <mat-card-title>Contáctanos</mat-card-title>
+      <mat-card-subtitle>Estamos aquí para ayudarte a encontrar el vehículo perfecto</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="contact-options">
+        <div class="whatsapp-option">
+          <div class="whatsapp-content">
+            <mat-icon class="whatsapp-icon">whatsapp</mat-icon>
+            <h3>Contacto Directo por WhatsApp</h3>
+            <p>Habla directamente con nuestro equipo de ventas para una atención inmediata</p>
+            <button mat-raised-button color="accent" class="whatsapp-btn" (click)="contactViaWhatsApp()">
+              <mat-icon>whatsapp</mat-icon>
+              Contactar por WhatsApp
+            </button>
+          </div>
+        </div>
+
+        <div class="divider">
+          <span>O</span>
+        </div>
+
+        <div class="form-option">
+          <h3>Envíanos un mensaje</h3>
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Nombre completo</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="name?.hasError('required')">
+                  El nombre es requerido
+                </mat-error>
+                <mat-error *ngIf="name?.hasError('minlength')">
+                  El nombre debe tener al menos 3 caracteres
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Correo electrónico</mat-label>
+                <input matInput type="email" formControlName="email" required>
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="email?.hasError('required')">
+                  El correo electrónico es requerido
+                </mat-error>
+                <mat-error *ngIf="email?.hasError('email')">
+                  Ingresa un correo electrónico válido
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Teléfono</mat-label>
+                <input matInput formControlName="phone" required>
+                <mat-icon matSuffix>phone</mat-icon>
+                <mat-error *ngIf="phone?.hasError('required')">
+                  El teléfono es requerido
+                </mat-error>
+                <mat-error *ngIf="phone?.hasError('pattern')">
+                  Ingresa solo números
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Preferencia de contacto</mat-label>
+                <mat-select formControlName="contactMethod" required>
+                  <mat-option *ngFor="let method of contactMethods" [value]="method.value">
+                    {{ method.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>contact_mail</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Asunto</mat-label>
+              <input matInput formControlName="subject" required>
+              <mat-icon matSuffix>subject</mat-icon>
+              <mat-error *ngIf="subject?.hasError('required')">
+                El asunto es requerido
+              </mat-error>
+              <mat-error *ngIf="subject?.hasError('minlength')">
+                El asunto debe tener al menos 5 caracteres
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Mensaje</mat-label>
+              <textarea matInput formControlName="message" rows="5" required></textarea>
+              <mat-icon matSuffix>message</mat-icon>
+              <mat-error *ngIf="message?.hasError('required')">
+                El mensaje es requerido
+              </mat-error>
+              <mat-error *ngIf="message?.hasError('minlength')">
+                El mensaje debe tener al menos 10 caracteres
+              </mat-error>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              class="full-width submit-button"
+              [disabled]="!contactForm.valid || isLoading">
+              <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+              <span *ngIf="!isLoading">Enviar Mensaje</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="contact-background">
+    <div class="floating-vehicle"></div>
+    <div class="floating-gears"></div>
+  </div>
+</div>

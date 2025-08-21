@@ -1,0 +1,253 @@
+/* contact.component.css */
+.contact-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #000000 0%, #ff7700 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: 1;
+}
+
+.contact-card {
+  width: 100%;
+  max-width: 800px;
+  padding: 32px;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(255, 119, 0, 0.3);
+  border: 1px solid rgba(255, 119, 0, 0.2);
+  color: #fff;
+}
+
+.contact-card mat-card-title {
+  color: #ff7700;
+  font-weight: 600;
+  font-size: 28px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.contact-card mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.contact-options {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.whatsapp-option {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.whatsapp-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.whatsapp-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.whatsapp-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #25D366;
+  margin-bottom: 16px;
+}
+
+.whatsapp-content h3 {
+  color: #ff7700;
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+}
+
+.whatsapp-content p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.whatsapp-btn {
+  background: #25D366 !important;
+  color: white !important;
+  border-radius: 50px;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+  background: #128C7E !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.divider span {
+  padding: 0 16px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.form-option h3 {
+  color: #ff7700;
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 1.4rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.submit-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #ff7700 0%, #ff5500 100%);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 119, 0, 0.4);
+}
+
+.submit-button:disabled {
+  background: rgba(255, 119, 0, 0.5);
+}
+
+/* Estilos para los campos de formulario */
+::ng-deep .contact-card .mat-form-field-label {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+::ng-deep .contact-card .mat-form-field-outline {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+::ng-deep .contact-card .mat-input-element {
+  color: #ffffff !important;
+}
+
+::ng-deep .contact-card .mat-form-field-outline-thick {
+  color: #ff7700 !important;
+}
+
+::ng-deep .contact-card .mat-form-field.mat-focused .mat-form-field-label {
+  color: #ff7700 !important;
+}
+
+::ng-deep .contact-card .mat-select-value {
+  color: #ffffff !important;
+}
+
+/* Iconos */
+::ng-deep .contact-card .mat-icon {
+  color: #ff7700;
+}
+
+/* Spinner */
+::ng-deep .submit-button .mat-progress-spinner circle {
+  stroke: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .contact-card {
+    margin: 20px;
+    padding: 24px;
+  }
+
+  .contact-card mat-card-title {
+    font-size: 24px;
+  }
+
+  .whatsapp-content h3,
+  .form-option h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-container {
+    padding: 10px;
+  }
+
+  .contact-card {
+    padding: 20px;
+  }
+
+  .whatsapp-option {
+    padding: 16px;
+  }
+
+  .whatsapp-btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}

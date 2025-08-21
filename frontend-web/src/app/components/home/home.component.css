@@ -43,25 +43,45 @@
   opacity: 0.9;
 }
 
+/* Botón Explorar Vehículos - ACTUALIZADO */
 .hero-section button {
   border-radius: 50px;
   padding: 15px 40px;
   font-size: 1.1rem;
   font-weight: 600;
-  background: #e74c3c;
-  color: white;
+  background: white !important;
+  color: black !important;
   border: none;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-section button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(135deg, #ff7700 0%, #ff5500 100%);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: -1;
 }
 
 .hero-section button:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
-  background: #c0392b;
+  box-shadow: 0 8px 25px rgba(255, 119, 0, 0.6);
+  color: white !important;
 }
 
-/* Featured Sections - MEJORADO */
+.hero-section button:hover::before {
+  width: 100%;
+}
+
+/* Resto del código se mantiene igual... */
 .featured-section {
   padding: 80px 20px;
   text-align: center;

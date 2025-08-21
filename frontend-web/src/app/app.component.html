@@ -10,6 +10,7 @@
       <button mat-button routerLink="/cars" routerLinkActive="active">Autos</button>
       <button mat-button routerLink="/motorcycles" routerLinkActive="active">Motos</button>
       <button mat-button routerLink="/search" routerLinkActive="active">Búsqueda</button>
+      <button mat-button routerLink="/contact" routerLinkActive="active">Contacto</button>
     </div>
 
     <div class="auth-section">
@@ -28,7 +29,7 @@
 
       <ng-template #notLoggedIn>
         <button mat-button routerLink="/login">Iniciar Sesión</button>
-        <button mat-button routerLink="/register">Registrarse</button>
+        <button mat-raised-button routerLink="/register">Registrarse</button>
       </ng-template>
     </div>
   </div>
@@ -39,6 +40,7 @@
 </main>
 
 <footer class="main-footer">
+  <div class="footer-pattern"></div>
   <div class="footer-content">
     <p>&copy; 2023 Venta de Autos y Motos. Todos los derechos reservados.</p>
     <div class="social-links">
