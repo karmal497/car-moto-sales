@@ -1,5 +1,5 @@
 {
-  "name": "frontend-web",
+  "name": "frontend-admin",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -10,7 +10,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^19.2.14",
     "@angular/cdk": "^19.2.19",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
@@ -20,10 +19,8 @@
     "@angular/platform-browser": "^19.2.0",
     "@angular/platform-browser-dynamic": "^19.2.0",
     "@angular/router": "^19.2.0",
-    "@types/three": "^0.179.0",
     "jwt-decode": "^4.0.0",
     "rxjs": "~7.8.0",
-    "three": "^0.179.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },

@@ -1,0 +1,104 @@
+/* app.component.css */
+.main-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.toolbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 16px;
+}
+
+.nav-section {
+  display: flex;
+  gap: 8px;
+}
+
+.auth-section {
+  display: flex;
+  gap: 8px;
+}
+
+.main-content {
+  min-height: calc(100vh - 128px);
+}
+
+.main-footer {
+  background-color: #3f51b5;
+  color: white;
+  padding: 24px;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.social-links {
+  display: flex;
+  gap: 16px;
+}
+
+.social-links a {
+  color: white;
+}
+
+/* 3D Effects and Animations */
+.card-3d {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.card-3d:hover {
+  transform: translateY(-5px) rotateX(5deg);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.vehicle-image {
+  transition: transform 0.5s ease;
+}
+
+.vehicle-image:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .toolbar-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+}

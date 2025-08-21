@@ -1,0 +1,117 @@
+<div class="search-container">
+  <div class="search-header">
+    <h1>Búsqueda de Vehículos</h1>
+    <p>Encuentra el auto o moto perfecto para ti</p>
+  </div>
+
+  <!-- Search Input -->
+  <mat-card class="search-card">
+    <mat-card-content>
+      <div class="search-input-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>¿Qué estás buscando?</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Marca, modelo, características...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="type-field">
+          <mat-label>Tipo de vehículo</mat-label>
+          <mat-select [(ngModel)]="selectedType">
+            <mat-option *ngFor="let option of typeOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="search()" [disabled]="!searchQuery">
+          <mat-icon>search</mat-icon>
+          Buscar
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Results -->
+  <div *ngIf="isLoading" class="loading-state">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Buscando vehículos...</p>
+  </div>
+
+  <div *ngIf="!isLoading && searchResults.length > 0" class="results-section">
+    <h2>Resultados de búsqueda ({{ searchResults.length }})</h2>
+
+    <div class="results-grid">
+      <mat-card
+        *ngFor="let vehicle of searchResults"
+        class="vehicle-card card-3d"
+        (click)="viewVehicleDetails(vehicle)">
+
+        <div class="vehicle-image-container">
+          <img
+            [src]="vehicle.image_url || (vehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg')"
+            [alt]="vehicle.title"
+            class="vehicle-image"
+            (error)="vehicle.image_url = vehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg'">
+
+          <div class="vehicle-badge" [class.sold]="vehicle.is_sold">
+            {{ vehicle.is_sold ? 'Vendido' : 'Disponible' }}
+          </div>
+
+          <div class="vehicle-type-badge">
+            {{ vehicle.type === 'car' ? 'Auto' : 'Moto' }}
+          </div>
+        </div>
+
+        <mat-card-content>
+          <h3 class="vehicle-title">{{ vehicle.brand }} {{ vehicle.model }}</h3>
+          <p class="vehicle-year">{{ vehicle.year }}</p>
+
+          <div class="vehicle-details">
+            <div class="vehicle-detail">
+              <mat-icon>color_lens</mat-icon>
+              <span>{{ vehicle.color }}</span>
+            </div>
+
+            <div class="vehicle-detail" *ngIf="vehicle.type === 'car' && vehicle.transmission">
+              <mat-icon>settings</mat-icon>
+              <span>{{ getTransmissionLabel(vehicle.transmission) }}</span>
+            </div>
+
+            <div class="vehicle-detail" *ngIf="vehicle.type === 'motorcycle' && vehicle.category">
+              <mat-icon>category</mat-icon>
+              <span>{{ getCategoryLabel(vehicle.category) }}</span>
+            </div>
+
+            <div class="vehicle-detail">
+              <mat-icon>speed</mat-icon>
+              <span>{{ formatNumber(vehicle.mileage) }} km</span>
+            </div>
+          </div>
+
+          <div class="vehicle-price">
+            <span class="price-amount">${{ formatNumber(vehicle.price) }}</span>
+            <span class="price-label">Precio</span>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary" class="full-width-btn">
+            Ver Detalles
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && searchQuery && searchResults.length === 0" class="no-results">
+    <mat-icon>search_off</mat-icon>
+    <h3>No se encontraron resultados</h3>
+    <p>Intenta con otros términos de búsqueda</p>
+  </div>
+
+  <div *ngIf="!isLoading && !searchQuery" class="search-prompt">
+    <mat-icon>search</mat-icon>
+    <h3>Busca autos y motos</h3>
+    <p>Ingresa palabras clave como marca, modelo, año o características para encontrar vehículos</p>
+  </div>
+</div>

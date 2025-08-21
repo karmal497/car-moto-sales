@@ -1,0 +1,145 @@
+<div class="vehicle-detail-container" *ngIf="!isLoading && vehicle">
+  <div class="vehicle-detail-content">
+    <!-- Vehicle Images -->
+    <div class="vehicle-images">
+      <div class="main-image">
+        <img [src]="vehicleImages[activeImageIndex]" [alt]="vehicle.title" class="vehicle-main-image">
+      </div>
+    </div>
+
+    <!-- Vehicle Info -->
+    <div class="vehicle-info">
+      <div class="vehicle-header">
+        <div class="vehicle-status">
+          <span class="status-badge" [class.sold]="vehicle.is_sold">
+            {{ vehicle.is_sold ? 'Vendido' : 'Disponible' }}
+          </span>
+          <span class="vehicle-type">
+            {{ isCar ? 'Auto' : 'Moto' }}
+          </span>
+        </div>
+        <h1>{{ vehicle.brand }} {{ vehicle.model }} {{ vehicle.year }}</h1>
+        <p class="vehicle-price">${{ formatNumber(vehicle.price) }}</p>
+      </div>
+
+      <div class="vehicle-details-grid">
+        <div class="detail-item">
+          <mat-icon>calendar_today</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Año</span>
+            <span class="detail-value">{{ vehicle.year }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon>color_lens</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Color</span>
+            <span class="detail-value">{{ vehicle.color }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon>speed</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Kilometraje</span>
+            <span class="detail-value">{{ formatNumber(vehicle.mileage) }} km</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon>local_gas_station</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Combustible</span>
+            <span class="detail-value">{{ vehicle.fuel_type }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item" *ngIf="isCar">
+          <mat-icon>settings</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Transmisión</span>
+            <span class="detail-value">{{ getTransmissionLabel(vehicle.transmission) }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item" *ngIf="!isCar">
+          <mat-icon>category</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Categoría</span>
+            <span class="detail-value">{{ getCategoryLabel(vehicle.category) }}</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon>engineering</mat-icon>
+          <div class="detail-content">
+            <span class="detail-label">Motor</span>
+            <span class="detail-value">{{ vehicle.engine }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="vehicle-description">
+        <h3>Descripción</h3>
+        <p>{{ vehicle.description }}</p>
+      </div>
+
+      <div class="vehicle-actions">
+        <button mat-raised-button color="primary" class="contact-btn" (click)="contactSeller()" [disabled]="vehicle.is_sold">
+          <mat-icon>message</mat-icon>
+          Contactar Vendedor
+        </button>
+        <button mat-stroked-button color="primary" class="share-btn">
+          <mat-icon>share</mat-icon>
+          Compartir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Similar Vehicles -->
+  <div class="similar-vehicles" *ngIf="similarVehicles.length > 0">
+    <h2>Vehículos similares</h2>
+    <div class="similar-vehicles-grid">
+      <mat-card
+        *ngFor="let similarVehicle of similarVehicles"
+        class="similar-vehicle-card card-3d"
+        (click)="viewSimilarVehicle(similarVehicle)">
+
+        <div class="similar-vehicle-image-container">
+          <img
+            [src]="similarVehicle.image_url || (similarVehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg')"
+            [alt]="similarVehicle.title"
+            class="similar-vehicle-image">
+
+          <div class="similar-vehicle-badge" [class.sold]="similarVehicle.is_sold">
+            {{ similarVehicle.is_sold ? 'Vendido' : 'Disponible' }}
+          </div>
+        </div>
+
+        <mat-card-content>
+          <h3>{{ similarVehicle.brand }} {{ similarVehicle.model }}</h3>
+          <p class="similar-vehicle-year">{{ similarVehicle.year }}</p>
+          <p class="similar-vehicle-price">${{ formatNumber(similarVehicle.price) }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="loading-state">
+  <mat-spinner diameter="50"></mat-spinner>
+  <p>Cargando información del vehículo...</p>
+</div>
+
+<!-- Not Found State -->
+<div *ngIf="!isLoading && !vehicle" class="not-found-state">
+  <mat-icon>error_outline</mat-icon>
+  <h2>Vehículo no encontrado</h2>
+  <p>El vehículo que buscas no existe o ha sido removido</p>
+  <button mat-raised-button color="primary" routerLink="/">
+    Volver al inicio
+  </button>
+</div>

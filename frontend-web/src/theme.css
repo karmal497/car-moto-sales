@@ -1,0 +1,142 @@
+/* Custom Angular Material Theme */
+:root {
+  --primary-color: #0097a7;
+  --accent-color: #ff6e40;
+  --warn-color: #f44336;
+  --success-color: #4caf50;
+}
+
+/* Cyan/Orange Theme */
+.mat-primary {
+  color: var(--primary-color) !important;
+}
+
+.mat-accent {
+  color: var(--accent-color) !important;
+}
+
+.mat-warn {
+  color: var(--warn-color) !important;
+}
+
+.mat-button.mat-primary,
+.mat-raised-button.mat-primary,
+.mat-fab.mat-primary,
+.mat-mini-fab.mat-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-button.mat-accent,
+.mat-raised-button.mat-accent,
+.mat-fab.mat-accent,
+.mat-mini-fab.mat-accent {
+  background-color: var(--accent-color) !important;
+}
+
+.mat-button.mat-warn,
+.mat-raised-button.mat-warn,
+.mat-fab.mat-warn,
+.mat-mini-fab.mat-warn {
+  background-color: var(--warn-color) !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: var(--primary-color) !important;
+}
+
+.mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-input-element:focus {
+  border-color: var(--primary-color) !important;
+}
+
+.mat-checkbox-checked.mat-primary .mat-checkbox-background {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-radio-button.mat-primary .mat-radio-inner-circle {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-radio-button.mat-primary.mat-radio-checked .mat-radio-outer-circle {
+  border-color: var(--primary-color) !important;
+}
+
+.mat-slider-track-fill {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-slider-thumb {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-slider-thumb-label {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-progress-bar.mat-primary .mat-progress-bar-fill::after {
+  background-color: var(--primary-color) !important;
+}
+
+.mat-progress-spinner.mat-primary path {
+  stroke: var(--primary-color) !important;
+}
+
+/* Custom Snackbar Backgrounds */
+.mat-snack-bar-container.success-snackbar {
+  background: var(--success-color) !important;
+  color: white !important;
+}
+
+.mat-snack-bar-container.error-snackbar {
+  background: var(--warn-color) !important;
+  color: white !important;
+}
+
+.mat-snack-bar-container.warning-snackbar {
+  background: var(--accent-color) !important;
+  color: white !important;
+}
+
+/* Custom Card Styles */
+.mat-card.primary-card {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #006978 100%);
+  color: white;
+}
+
+.mat-card.accent-card {
+  background: linear-gradient(135deg, var(--accent-color) 0%, #e65100 100%);
+  color: white;
+}
+
+/* Custom Button Styles */
+.mat-button.rounded-button {
+  border-radius: 24px !important;
+  padding: 0 24px !important;
+}
+
+.mat-raised-button.glow-button {
+  box-shadow: 0 4px 15px rgba(0, 151, 167, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.mat-raised-button.glow-button:hover {
+  box-shadow: 0 8px 25px rgba(0, 151, 167, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Custom Form Field Styles */
+.mat-form-field.outline-field .mat-form-field-outline {
+  border-radius: 8px !important;
+}
+
+.mat-form-field.outline-field .mat-form-field-outline-thick {
+  border-width: 2px !important;
+  border-color: var(--primary-color) !important;
+}

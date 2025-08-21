@@ -1,0 +1,122 @@
+<!-- components/dashboard/dashboard.component.html -->
+<div class="dashboard-container">
+  <h1>Panel de Administración</h1>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>directions_car</mat-icon>
+        </div>
+        <h2>{{stats.totalCars}}</h2>
+        <p>Total Autos</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>two_wheeler</mat-icon>
+        </div>
+        <h2>{{stats.totalMotorcycles}}</h2>
+        <p>Total Motos</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h2>{{stats.soldCars}}</h2>
+        <p>Autos Vendidos</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h2>{{stats.soldMotorcycles}}</h2>
+        <p>Motos Vendidas</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="recent-section">
+    <div class="recent-vehicles">
+      <h2>Autos Recientes</h2>
+      <mat-table [dataSource]="recentCars" class="mat-elevation-z8">
+        <ng-container matColumnDef="image">
+          <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
+          <mat-cell *matCellDef="let car">
+            <img [src]="car.image_url" alt="{{car.title}}" class="table-image">
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <mat-header-cell *matHeaderCellDef>Título</mat-header-cell>
+          <mat-cell *matCellDef="let car">{{car.title}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
+          <mat-cell *matCellDef="let car">${{car.price | number}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+          <mat-cell *matCellDef="let car">
+            <button mat-icon-button color="primary" [routerLink]="['/admin/cars/edit', car.id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteCar(car.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'actions']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'actions'];"></mat-row>
+      </mat-table>
+    </div>
+
+    <div class="recent-vehicles">
+      <h2>Motos Recientes</h2>
+      <mat-table [dataSource]="recentMotorcycles" class="mat-elevation-z8">
+        <ng-container matColumnDef="image">
+          <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
+          <mat-cell *matCellDef="let motorcycle">
+            <img [src]="motorcycle.image_url" alt="{{motorcycle.title}}" class="table-image">
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <mat-header-cell *matHeaderCellDef>Título</mat-header-cell>
+          <mat-cell *matCellDef="let motorcycle">{{motorcycle.title}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
+          <mat-cell *matCellDef="let motorcycle">${{motorcycle.price | number}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+          <mat-cell *matCellDef="let motorcycle">
+            <button mat-icon-button color="primary" [routerLink]="['/admin/motorcycles/edit', motorcycle.id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteMotorcycle(motorcycle.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'actions']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'actions'];"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+</div>
