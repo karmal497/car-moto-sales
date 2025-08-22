@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from './services/auth.service';
 
 // Angular Material
@@ -28,9 +28,16 @@ export class AppComponent implements OnInit {
   isLoggedIn = false;
   username: string | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.checkAuthStatus();
+  }
+
+  checkAuthStatus(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
     this.username = this.authService.getUsername();
   }
@@ -39,5 +46,6 @@ export class AppComponent implements OnInit {
     this.authService.removeToken();
     this.isLoggedIn = false;
     this.username = null;
+    this.router.navigate(['/']);
   }
 }

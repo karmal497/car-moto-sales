@@ -66,6 +66,12 @@ export class LoginComponent implements OnInit {
             duration: 3000,
             panelClass: ['success-snackbar']
           });
+
+          // Recargar la página para actualizar el estado de autenticación en la navbar
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+
           this.router.navigate(['/']);
           this.isLoading = false;
         },

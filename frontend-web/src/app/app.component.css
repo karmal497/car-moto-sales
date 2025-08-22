@@ -171,6 +171,19 @@
   box-shadow: 0 6px 20px rgba(255, 119, 0, 0.5);
 }
 
+/* Estilos para el botón de usuario logueado */
+.auth-section .user-menu-button {
+  background: linear-gradient(135deg, #ff7700 0%, #ff5500 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(255, 119, 0, 0.4);
+  border: none !important;
+}
+
+.auth-section .user-menu-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 119, 0, 0.5);
+}
+
 .main-content {
   min-height: calc(100vh - 128px);
 }
