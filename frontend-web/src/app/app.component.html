@@ -7,9 +7,18 @@
 
     <div class="nav-section">
       <button mat-button routerLink="/" routerLinkActive="active">Inicio</button>
-      <button mat-button routerLink="/cars" routerLinkActive="active">Autos</button>
-      <button mat-button routerLink="/motorcycles" routerLinkActive="active">Motos</button>
-      <button mat-button routerLink="/search" routerLinkActive="active">Búsqueda</button>
+      <button mat-button (click)="checkAuthAndNavigate('/cars')" [class.locked]="!isLoggedIn" routerLinkActive="active">
+        Autos
+        <mat-icon *ngIf="!isLoggedIn" class="lock-icon">lock</mat-icon>
+      </button>
+      <button mat-button (click)="checkAuthAndNavigate('/motorcycles')" [class.locked]="!isLoggedIn" routerLinkActive="active">
+        Motos
+        <mat-icon *ngIf="!isLoggedIn" class="lock-icon">lock</mat-icon>
+      </button>
+      <button mat-button (click)="checkAuthAndNavigate('/search')" [class.locked]="!isLoggedIn" routerLinkActive="active">
+        Búsqueda
+        <mat-icon *ngIf="!isLoggedIn" class="lock-icon">lock</mat-icon>
+      </button>
       <button mat-button routerLink="/contact" routerLinkActive="active">Contacto</button>
     </div>
 

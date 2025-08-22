@@ -2,7 +2,15 @@
   <div class="hero-content">
     <h1 class="hero-title">Encuentra tu Auto o Moto Ideal</h1>
     <p class="hero-subtitle">Explora nuestra amplia selección de vehículos de alta calidad</p>
-    <button mat-raised-button color="accent" routerLink="/search">Explorar Vehículos</button>
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="checkAuthAndNavigate('/search')"
+      [class.locked]="!isLoggedIn"
+      class="explore-btn">
+      <mat-icon *ngIf="!isLoggedIn" class="lock-icon">lock</mat-icon>
+      Explorar Vehículos
+    </button>
   </div>
 </div>
 
@@ -18,7 +26,7 @@
         <p class="price">${{formatNumber(car.price)}}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary" [routerLink]="['/car', car.id]">Ver Detalles</button>
+        <button mat-button color="primary" (click)="checkAuthAndNavigate('/car/' + car.id)">Ver Detalles</button>
       </mat-card-actions>
     </mat-card>
   </div>
@@ -36,7 +44,7 @@
         <p class="price">${{formatNumber(motorcycle.price)}}</p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button color="primary" [routerLink]="['/motorcycle', motorcycle.id]">Ver Detalles</button>
+        <button mat-button color="primary" (click)="checkAuthAndNavigate('/motorcycle/' + motorcycle.id)">Ver Detalles</button>
       </mat-card-actions>
     </mat-card>
   </div>
@@ -59,6 +67,23 @@
       <mat-icon>support_agent</mat-icon>
       <h3>Soporte 24/7</h3>
       <p>Nuestro equipo de soporte está disponible para ayudarte en todo momento.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de autenticación requerida -->
+<div *ngIf="showAuthModal" class="auth-modal-overlay">
+  <div class="auth-modal">
+    <div class="modal-header">
+      <mat-icon class="modal-icon">lock</mat-icon>
+      <h3>Acceso Restringido</h3>
+    </div>
+    <div class="modal-content">
+      <p>Debes iniciar sesión para acceder a esta sección</p>
+    </div>
+    <div class="modal-actions">
+      <button mat-button (click)="showAuthModal = false">Cancelar</button>
+      <button mat-raised-button color="primary" routerLink="/login" (click)="showAuthModal = false">Iniciar Sesión</button>
     </div>
   </div>
 </div>

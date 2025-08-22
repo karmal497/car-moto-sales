@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -47,5 +49,33 @@ export class AppComponent implements OnInit {
     this.isLoggedIn = false;
     this.username = null;
     this.router.navigate(['/']);
+  }
+
+  // Método para verificar autenticación antes de navegar
+  checkAuthAndNavigate(route: string): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate([route]);
+    } else {
+      // Efecto de vibración
+      this.shakeElement();
+
+      // Mostrar mensaje
+      this.snackBar.open('Debes iniciar sesión para acceder a esta sección', 'Cerrar', {
+        duration: 3000,
+        panelClass: ['error-snackbar'],
+        verticalPosition: 'top'
+      });
+    }
+  }
+
+  // Efecto de vibración para el candado
+  private shakeElement(): void {
+    const buttons = document.querySelectorAll('button, .clickable-element');
+    buttons.forEach(button => {
+      button.classList.add('shake-animation');
+      setTimeout(() => {
+        button.classList.remove('shake-animation');
+      }, 500);
+    });
   }
 }

@@ -57,6 +57,10 @@
   position: relative;
   overflow: hidden;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .hero-section button::before {
@@ -79,6 +83,130 @@
 
 .hero-section button:hover::before {
   width: 100%;
+}
+
+/* Estilo para botón bloqueado */
+.hero-section button.locked {
+  position: relative;
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.hero-section button.locked::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50px;
+  z-index: 2;
+}
+
+.lock-icon {
+  font-size: 20px;
+  animation: pulse-lock 2s infinite;
+  z-index: 3;
+}
+
+@keyframes pulse-lock {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Animación de vibración */
+.shake-animation {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Modal de autenticación */
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.auth-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  margin-bottom: 20px;
+}
+
+.modal-icon {
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  color: #e74c3c;
+  margin-bottom: 15px;
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10px); }
+}
+
+.modal-header h3 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.modal-content {
+  margin-bottom: 25px;
+}
+
+.modal-content p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modal-actions button {
+  border-radius: 50px;
+  padding: 10px 25px;
+  font-weight: 600;
 }
 
 /* Resto del código se mantiene igual... */
@@ -287,6 +415,10 @@
   .features-grid {
     grid-template-columns: 1fr;
   }
+
+  .modal-actions {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 480px) {
@@ -300,5 +432,19 @@
 
   .featured-section h2, .features-section h2 {
     font-size: 1.8rem;
+  }
+
+  .auth-modal {
+    padding: 20px;
+  }
+
+  .modal-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .modal-header h3 {
+    font-size: 1.4rem;
   }
 }
