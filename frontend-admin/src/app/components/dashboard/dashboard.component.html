@@ -1,12 +1,11 @@
-<!-- components/dashboard/dashboard.component.html -->
 <div class="dashboard-container">
   <h1>Panel de Administración</h1>
 
   <div class="stats-grid">
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>directions_car</mat-icon>
+        <div class="stat-icon" style="background: rgba(255, 119, 0, 0.1);">
+          <mat-icon style="color: #ff7700;">directions_car</mat-icon>
         </div>
         <h2>{{stats.totalCars}}</h2>
         <p>Total Autos</p>
@@ -15,8 +14,8 @@
 
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>two_wheeler</mat-icon>
+        <div class="stat-icon" style="background: rgba(51, 51, 51, 0.1);">
+          <mat-icon style="color: #333;">two_wheeler</mat-icon>
         </div>
         <h2>{{stats.totalMotorcycles}}</h2>
         <p>Total Motos</p>
@@ -25,8 +24,8 @@
 
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>check_circle</mat-icon>
+        <div class="stat-icon" style="background: rgba(255, 119, 0, 0.1);">
+          <mat-icon style="color: #ff7700;">check_circle</mat-icon>
         </div>
         <h2>{{stats.soldCars}}</h2>
         <p>Autos Vendidos</p>
@@ -35,11 +34,34 @@
 
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>check_circle</mat-icon>
+        <div class="stat-icon" style="background: rgba(51, 51, 51, 0.1);">
+          <mat-icon style="color: #333;">check_circle</mat-icon>
         </div>
         <h2>{{stats.soldMotorcycles}}</h2>
         <p>Motos Vendidas</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon" style="background: rgba(255, 119, 0, 0.1);">
+          <mat-icon style="color: #ff7700;">people</mat-icon>
+        </div>
+        <h2>{{stats.totalClients}}</h2>
+        <p>Total Clientes</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="chart-section">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Resumen de Ventas</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          <canvas id="vehicleChart"></canvas>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -62,23 +84,20 @@
 
         <ng-container matColumnDef="price">
           <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
-          <mat-cell *matCellDef="let car">${{car.price | number}}</mat-cell>
+          <mat-cell *matCellDef="let car">${{car.price | number:'1.0-0'}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
           <mat-cell *matCellDef="let car">
-            <button mat-icon-button color="primary" [routerLink]="['/admin/cars/edit', car.id]">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="deleteCar(car.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            <span [class]="car.is_sold ? 'status-sold' : 'status-available'">
+              {{car.is_sold ? 'Vendido' : 'Disponible'}}
+            </span>
           </mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'actions']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'actions'];"></mat-row>
+        <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'status']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'status'];"></mat-row>
       </mat-table>
     </div>
 
@@ -99,23 +118,20 @@
 
         <ng-container matColumnDef="price">
           <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
-          <mat-cell *matCellDef="let motorcycle">${{motorcycle.price | number}}</mat-cell>
+          <mat-cell *matCellDef="let motorcycle">${{motorcycle.price | number:'1.0-0'}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
           <mat-cell *matCellDef="let motorcycle">
-            <button mat-icon-button color="primary" [routerLink]="['/admin/motorcycles/edit', motorcycle.id]">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button color="warn" (click)="deleteMotorcycle(motorcycle.id)">
-              <mat-icon>delete</mat-icon>
-            </button>
+            <span [class]="motorcycle.is_sold ? 'status-sold' : 'status-available'">
+              {{motorcycle.is_sold ? 'Vendida' : 'Disponible'}}
+            </span>
           </mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'actions']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'actions'];"></mat-row>
+        <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'status']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'status'];"></mat-row>
       </mat-table>
     </div>
   </div>

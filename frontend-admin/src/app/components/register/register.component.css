@@ -1,0 +1,97 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #000000 0%, #333333 100%);
+  padding: 20px;
+}
+
+.register-card {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 450px;
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.logo-section h1 {
+  color: #ff7700;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+  letter-spacing: 2px;
+}
+
+.logo-section p {
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.register-button {
+  background-color: #ff7700;
+  color: white;
+  padding: 12px;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.register-button:hover {
+  background-color: #e56a00;
+}
+
+.register-button:disabled {
+  background-color: #ccc;
+}
+
+.login-section {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-section p {
+  color: #666;
+  margin: 0;
+}
+
+.login-section a {
+  color: #ff7700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login-section a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #f44336;
+  text-align: center;
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+
+::ng-deep .mat-form-field-outline {
+  color: #ddd;
+}
+
+::ng-deep .mat-form-field-outline-thick {
+  color: #ff7700 !important;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+  color: #ff7700 !important;
+}

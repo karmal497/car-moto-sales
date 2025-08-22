@@ -1,0 +1,45 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-section">
+      <h1>KARMALITE</h1>
+      <p>Panel de Administración</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Usuario</mat-label>
+        <input matInput formControlName="username" required>
+        <mat-icon matSuffix>person</mat-icon>
+        <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+          El usuario es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" required>
+        <mat-icon matSuffix>lock</mat-icon>
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          La contraseña es requerida
+        </mat-error>
+      </mat-form-field>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="login-button"
+        [disabled]="!loginForm.valid || isLoading">
+        {{ isLoading ? 'INICIANDO SESIÓN...' : 'INICIAR SESIÓN' }}
+      </button>
+    </form>
+
+    <div class="register-section">
+      <p>¿No tienes una cuenta? <a (click)="goToRegister()">Regístrate aquí</a></p>
+    </div>
+  </div>
+</div>

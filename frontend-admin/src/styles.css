@@ -1,4 +1,83 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/cyan-orange.css';
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Personalización de la paleta de colores */
+.mat-primary {
+  --mat-primary: #ff7700;
+  --mat-on-primary: #ffffff;
+}
+
+.mat-accent {
+  --mat-accent: #333333;
+  --mat-on-accent: #ffffff;
+}
+
+.mat-warn {
+  --mat-warn: #f44336;
+  --mat-on-warn: #ffffff;
+}
+
+/* Personalización de componentes específicos */
+.mat-raised-button.mat-primary {
+  background-color: #ff7700;
+  color: white;
+}
+
+.mat-raised-button.mat-primary:hover {
+  background-color: #e56a00;
+}
+
+.mat-card {
+  border-radius: 8px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mat-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Utilidades */
+.text-center {
+  text-align: center;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.p-20 {
+  padding: 20px;
+}
+
+/* Scroll personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff7700;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e56a00;
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

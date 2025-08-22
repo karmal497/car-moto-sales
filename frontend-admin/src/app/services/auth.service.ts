@@ -1,5 +1,6 @@
-// services/auth.service.ts
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
@@ -7,45 +8,55 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class AuthService {
-  private adminTokenKey = 'admin_access_token';
+  private apiUrl = 'http://localhost:8000/api';
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
-  setToken(token: string): void {
-    localStorage.setItem(this.adminTokenKey, token);
+  login(username: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/token/`, { username, password }).pipe(
+      tap((response: any) => {
+        localStorage.setItem('access_token', response.access);
+        localStorage.setItem('refresh_token', response.refresh);
+        this.isAuthenticatedSubject.next(true);
+      })
+    );
   }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.adminTokenKey);
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register/`, userData);
   }
 
-  removeToken(): void {
-    localStorage.removeItem(this.adminTokenKey);
+  logout(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    this.isAuthenticatedSubject.next(false);
     this.router.navigate(['/login']);
   }
 
-  isLoggedIn(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
-
-    try {
-      const decoded: any = jwtDecode(token);
-      const currentTime = Date.now() / 1000;
-      return decoded.exp > currentTime;
-    } catch (error) {
-      return false;
-    }
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
   }
 
-  getUsername(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
+  isLoggedIn(): boolean {
+    return this.hasToken();
+  }
 
-    try {
-      const decoded: any = jwtDecode(token);
-      return decoded.username;
-    } catch (error) {
-      return null;
+  private hasToken(): boolean {
+    return !!localStorage.getItem('access_token');
+  }
+
+  getDecodedToken(): any {
+    const token = this.getToken();
+    if (token) {
+      return jwtDecode(token);
     }
+    return null;
+  }
+
+  refreshToken(): Observable<any> {
+    const refreshToken = localStorage.getItem('refresh_token');
+    return this.http.post(`${this.apiUrl}/token/refresh/`, { refresh: refreshToken });
   }
 }

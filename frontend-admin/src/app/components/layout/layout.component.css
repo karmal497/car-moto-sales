@@ -1,0 +1,95 @@
+.layout-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.toolbar {
+  background: #000000 !important;
+  color: white !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.toolbar-title {
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.menu-button, .user-button {
+  color: white;
+}
+
+.sidenav-container {
+  flex: 1;
+}
+
+.sidenav {
+  background: #1a1a1a;
+  color: white;
+  width: 250px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidenav-content {
+  padding: 0;
+}
+
+.sidenav-header {
+  padding: 16px;
+  background: #ff7700;
+  color: white;
+}
+
+.sidenav-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.mat-nav-list {
+  padding: 0;
+}
+
+.mat-list-item {
+  color: #ddd !important;
+  border-left: 4px solid transparent;
+}
+
+.mat-list-item:hover {
+  background: #333 !important;
+}
+
+.mat-list-item.active {
+  background: #333 !important;
+  border-left: 4px solid #ff7700;
+  color: white !important;
+}
+
+.mat-list-item.active .mat-icon {
+  color: #ff7700 !important;
+}
+
+.submenu {
+  background: #252525;
+  padding-left: 40px;
+}
+
+.submenu .mat-list-item {
+  font-size: 0.9rem;
+}
+
+.content {
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.expand-icon {
+  margin-left: auto;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
