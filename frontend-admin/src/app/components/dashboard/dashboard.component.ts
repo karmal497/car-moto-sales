@@ -1,18 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { Chart, registerables } from 'chart.js';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-  imports: [MatCardModule, MatIconModule, MatTableModule, CommonModule]
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    MatTableModule,
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatProgressSpinnerModule
+  ]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   stats = {
     totalCars: 0,
     totalMotorcycles: 0,
@@ -24,6 +35,7 @@ export class DashboardComponent implements OnInit {
   recentCars: any[] = [];
   recentMotorcycles: any[] = [];
   chart: any;
+  isLoading = true;
 
   constructor(private apiService: ApiService) {
     Chart.register(...registerables);
@@ -34,12 +46,27 @@ export class DashboardComponent implements OnInit {
     this.loadRecentVehicles();
   }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.createChart();
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.chart) {
+      this.chart.destroy();
+    }
+  }
+
   loadStats(): void {
     this.apiService.getCars().subscribe({
       next: (cars) => {
         this.stats.totalCars = cars.length;
         this.stats.soldCars = cars.filter((car: any) => car.is_sold).length;
         this.createChart();
+      },
+      error: (error) => {
+        console.error('Error loading cars:', error);
       }
     });
 
@@ -48,10 +75,15 @@ export class DashboardComponent implements OnInit {
         this.stats.totalMotorcycles = motorcycles.length;
         this.stats.soldMotorcycles = motorcycles.filter((moto: any) => moto.is_sold).length;
         this.createChart();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading motorcycles:', error);
+        this.isLoading = false;
       }
     });
 
-    // Simular datos de clientes (deberías implementar un servicio para clientes)
+    // Simular datos de clientes
     this.stats.totalClients = 42;
   }
 
@@ -70,8 +102,10 @@ export class DashboardComponent implements OnInit {
   }
 
   createChart(): void {
-    if (this.stats.totalCars > 0 && this.stats.totalMotorcycles > 0) {
+    if (this.stats.totalCars > 0 || this.stats.totalMotorcycles > 0) {
       const ctx = document.getElementById('vehicleChart') as HTMLCanvasElement;
+
+      if (!ctx) return;
 
       if (this.chart) {
         this.chart.destroy();
@@ -94,15 +128,29 @@ export class DashboardComponent implements OnInit {
               '#333333',
               '#666666'
             ],
-            borderWidth: 0
+            borderWidth: 0,
+            hoverOffset: 15
           }]
         },
         options: {
           responsive: true,
+          cutout: '70%',
           plugins: {
             legend: {
-              position: 'bottom'
+              position: 'bottom',
+              labels: {
+                color: '#fff',
+                font: {
+                  family: 'Orbitron, sans-serif',
+                  size: 12
+                },
+                padding: 20
+              }
             }
+          },
+          animation: {
+            animateScale: true,
+            animateRotate: true
           }
         }
       });

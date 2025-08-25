@@ -5,6 +5,10 @@ import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
+import { CarsComponent } from './components/cars/cars.component';
+import { MotorcyclesComponent } from './components/motorcycles/motorcycles.component';
+import { CarFormComponent } from './components/car-form/car-form.component';
+import { MotorcycleFormComponent } from './components/motorcycle-form/motorcycle-form.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -17,7 +21,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
-      // Aquí agregarás las demás rutas para Autos, Motos, etc.
+      { path: 'cars', component: CarsComponent },
+      { path: 'cars/new', component: CarFormComponent },
+      { path: 'cars/edit/:id', component: CarFormComponent },
+      { path: 'motorcycles', component: MotorcyclesComponent },
+      { path: 'motorcycles/new', component: MotorcycleFormComponent },
+      { path: 'motorcycles/edit/:id', component: MotorcycleFormComponent },
     ]
   },
   { path: '**', redirectTo: '/dashboard' }

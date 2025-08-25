@@ -1,11 +1,11 @@
 <div class="dashboard-container">
-  <h1>Panel de Administración</h1>
+  <h1>Panel de Administración KARMALITE</h1>
 
   <div class="stats-grid">
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon" style="background: rgba(255, 119, 0, 0.1);">
-          <mat-icon style="color: #ff7700;">directions_car</mat-icon>
+        <div class="stat-icon">
+          <mat-icon style="color: #ff7700; font-size: 36px;">directions_car</mat-icon>
         </div>
         <h2>{{stats.totalCars}}</h2>
         <p>Total Autos</p>
@@ -14,8 +14,8 @@
 
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon" style="background: rgba(51, 51, 51, 0.1);">
-          <mat-icon style="color: #333;">two_wheeler</mat-icon>
+        <div class="stat-icon">
+          <mat-icon style="color: #ff7700; font-size: 36px;">two_wheeler</mat-icon>
         </div>
         <h2>{{stats.totalMotorcycles}}</h2>
         <p>Total Motos</p>
@@ -24,8 +24,8 @@
 
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon" style="background: rgba(255, 119, 0, 0.1);">
-          <mat-icon style="color: #ff7700;">check_circle</mat-icon>
+        <div class="stat-icon">
+          <mat-icon style="color: #4caf50; font-size: 36px;">check_circle</mat-icon>
         </div>
         <h2>{{stats.soldCars}}</h2>
         <p>Autos Vendidos</p>
@@ -34,8 +34,8 @@
 
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon" style="background: rgba(51, 51, 51, 0.1);">
-          <mat-icon style="color: #333;">check_circle</mat-icon>
+        <div class="stat-icon">
+          <mat-icon style="color: #4caf50; font-size: 36px;">check_circle</mat-icon>
         </div>
         <h2>{{stats.soldMotorcycles}}</h2>
         <p>Motos Vendidas</p>
@@ -44,8 +44,8 @@
 
     <mat-card class="stat-card">
       <mat-card-content>
-        <div class="stat-icon" style="background: rgba(255, 119, 0, 0.1);">
-          <mat-icon style="color: #ff7700;">people</mat-icon>
+        <div class="stat-icon">
+          <mat-icon style="color: #ff7700; font-size: 36px;">people</mat-icon>
         </div>
         <h2>{{stats.totalClients}}</h2>
         <p>Total Clientes</p>
@@ -54,13 +54,21 @@
   </div>
 
   <div class="chart-section">
-    <mat-card>
+    <mat-card style="background: rgba(26, 26, 26, 0.8); border: 1px solid #333; border-radius: 15px;">
       <mat-card-header>
-        <mat-card-title>Resumen de Ventas</mat-card-title>
+        <mat-card-title style="color: #ff7700; font-family: 'Orbitron', sans-serif; text-transform: uppercase;">
+          Resumen de Ventas
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="chart-container">
-          <canvas id="vehicleChart"></canvas>
+          @if (isLoading) {
+            <div class="loading-spinner">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+          } @else {
+            <canvas id="vehicleChart"></canvas>
+          }
         </div>
       </mat-card-content>
     </mat-card>
@@ -68,7 +76,12 @@
 
   <div class="recent-section">
     <div class="recent-vehicles">
-      <h2>Autos Recientes</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Autos Recientes</h2>
+        <button mat-raised-button class="add-button" routerLink="/cars">
+          <mat-icon>add</mat-icon> Nuevo Auto
+        </button>
+      </div>
       <mat-table [dataSource]="recentCars" class="mat-elevation-z8">
         <ng-container matColumnDef="image">
           <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
@@ -97,12 +110,18 @@
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'status']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'status'];"></mat-row>
+        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'status'];"
+                 [style.background]="row.is_sold ? 'rgba(244, 67, 54, 0.1)' : 'rgba(76, 175, 80, 0.1)'"></mat-row>
       </mat-table>
     </div>
 
     <div class="recent-vehicles">
-      <h2>Motos Recientes</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Motos Recientes</h2>
+        <button mat-raised-button class="add-button" routerLink="/motorcycles">
+          <mat-icon>add</mat-icon> Nueva Moto
+        </button>
+      </div>
       <mat-table [dataSource]="recentMotorcycles" class="mat-elevation-z8">
         <ng-container matColumnDef="image">
           <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
@@ -131,7 +150,8 @@
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="['image', 'title', 'price', 'status']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'status'];"></mat-row>
+        <mat-row *matRowDef="let row; columns: ['image', 'title', 'price', 'status'];"
+                 [style.background]="row.is_sold ? 'rgba(244, 67, 54, 0.1)' : 'rgba(76, 175, 80, 0.1)'"></mat-row>
       </mat-table>
     </div>
   </div>

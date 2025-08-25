@@ -27,7 +27,7 @@ export class LayoutComponent {
   marketingMenuOpen = false;
 
   menuItems = [
-    { name: 'Home', icon: 'home', route: '/dashboard' },
+    { name: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { name: 'Autos', icon: 'directions_car', route: '/cars' },
     { name: 'Motos', icon: 'two_wheeler', route: '/motorcycles' },
     { name: 'Clientes', icon: 'people', route: '/clients' },

@@ -1,73 +1,234 @@
-/* You can add global styles to this file, and also import other style files */
-@import '@angular/material/prebuilt-themes/cyan-orange.css';
+/* Importar fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-html, body {
-  height: 100%;
+/* Estilos globales */
+* {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #f5f5f5;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Personalización de la paleta de colores */
-.mat-primary {
-  --mat-primary: #ff7700;
-  --mat-on-primary: #ffffff;
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  color: #fff;
+  min-height: 100vh;
 }
 
-.mat-accent {
-  --mat-accent: #333333;
-  --mat-on-accent: #ffffff;
+/* Barra de navegación */
+.mat-toolbar {
+  background: linear-gradient(90deg, #1a1a1a 0%, #222222 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid #333;
 }
 
-.mat-warn {
-  --mat-warn: #f44336;
-  --mat-on-warn: #ffffff;
+.mat-toolbar .logo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: linear-gradient(45deg, #ff7700, #ff5500, #ff3300);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(255, 119, 0, 0.3);
 }
 
-/* Personalización de componentes específicos */
-.mat-raised-button.mat-primary {
-  background-color: #ff7700;
-  color: white;
+/* Menú lateral */
+.mat-sidenav {
+  background: linear-gradient(180deg, #1a1a1a 0%, #222222 100%) !important;
+  color: #fff !important;
+  border-right: 1px solid #333;
+  width: 250px;
 }
 
-.mat-raised-button.mat-primary:hover {
-  background-color: #e56a00;
+.mat-sidenav .mat-nav-list .mat-list-item {
+  color: #ddd !important;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
 }
 
+.mat-sidenav .mat-nav-list .mat-list-item:hover {
+  background: rgba(255, 119, 0, 0.1) !important;
+  color: #ff7700 !important;
+  border-left: 3px solid #ff7700;
+}
+
+.mat-sidenav .mat-nav-list .mat-list-item.active {
+  background: rgba(255, 119, 0, 0.2) !important;
+  color: #ff7700 !important;
+  border-left: 3px solid #ff7700;
+}
+
+.mat-sidenav .mat-divider {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+  margin: 10px 0;
+}
+
+/* Tarjetas */
 .mat-card {
-  border-radius: 8px !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  background: rgba(26, 26, 26, 0.8) !important;
+  color: #fff !important;
+  border: 1px solid #333 !important;
+  border-radius: 10px !important;
 }
 
+/* Botones */
+.mat-raised-button {
+  border-radius: 50px !important;
+}
+
+/* Formularios */
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-form-field-label {
+  color: #888 !important;
+}
+
+.mat-form-field-underline {
+  background-color: #444 !important;
+}
+
+.mat-form-field-ripple {
+  background-color: #ff7700 !important;
+}
+
+.mat-input-element {
+  color: #fff !important;
+}
+
+/* Diálogos */
+.mat-dialog-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #222222 100%) !important;
+  color: #fff !important;
+  border: 1px solid #333;
+  border-radius: 15px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Pestañas */
+.mat-tab-group {
+  background: rgba(26, 26, 26, 0.8) !important;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.mat-tab-label {
+  color: #ddd !important;
+  opacity: 1 !important;
+}
+
+.mat-tab-label-active {
+  color: #ff7700 !important;
+}
+
+.mat-ink-bar {
+  background-color: #ff7700 !important;
+}
+
+/* Tablas */
 .mat-table {
-  border-radius: 8px;
+  background: rgba(26, 26, 26, 0.8) !important;
+  border-radius: 10px;
   overflow: hidden;
 }
 
-/* Utilidades */
-.text-center {
-  text-align: center;
+.mat-header-cell {
+  color: #ff7700 !important;
+  font-weight: 600;
 }
 
-.mb-20 {
-  margin-bottom: 20px;
+.mat-cell {
+  color: #ddd !important;
 }
 
-.mt-20 {
-  margin-top: 20px;
+/* Selectores */
+.mat-select-value {
+  color: #fff !important;
 }
 
-.p-20 {
-  padding: 20px;
+.mat-select-arrow {
+  color: #888 !important;
 }
 
-/* Scroll personalizado */
+.mat-select-panel {
+  background: #1a1a1a !important;
+  border: 1px solid #333;
+}
+
+.mat-option {
+  color: #ddd !important;
+}
+
+.mat-option:hover:not(.mat-option-disabled),
+.mat-option:focus:not(.mat-option-disabled) {
+  background: rgba(255, 119, 0, 0.1) !important;
+}
+
+.mat-primary .mat-option.mat-selected {
+  color: #ff7700 !important;
+}
+
+/* Checkbox */
+.mat-checkbox-frame {
+  border-color: #444 !important;
+}
+
+.mat-checkbox-checked.mat-primary .mat-checkbox-background {
+  background-color: #ff7700 !important;
+}
+
+/* Spinner */
+.mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #ff7700;
+}
+
+/* Snackbar */
+.mat-snack-bar-container {
+  background: #333 !important;
+  color: #fff !important;
+  border: 1px solid #ff7700;
+}
+
+/* Efectos 3D y animaciones */
+.card-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: all 0.5s ease;
+}
+
+.card-3d:hover {
+  transform: translateY(-10px) rotateX(5deg);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 119, 0, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 119, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 119, 0, 0);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Scrollbar personalizado */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #1a1a1a;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -76,8 +237,16 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e56a00;
+  background: #ff5500;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Responsive utilities */
+.mobile-hidden {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none;
+  }
+}

@@ -1,0 +1,202 @@
+<div class="clients-container">
+  <h1>Gestión de Clientes</h1>
+
+  <mat-card class="clients-card">
+    <mat-card-content>
+      <mat-tab-group (selectedTabChange)="selectedTabIndex = $event.index" animationDuration="500ms">
+        <!-- Pestaña de Mensajes -->
+        <mat-tab label="Mensajes">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Mensajes de Contacto</h2>
+              <button mat-raised-button color="primary" (click)="exportData()">
+                <mat-icon>download</mat-icon>
+                Exportar
+              </button>
+            </div>
+
+            <div class="clients-table">
+              @if (isLoading) {
+                <div class="loading-spinner">
+                  <mat-spinner diameter="40"></mat-spinner>
+                </div>
+              } @else if (messages.length === 0) {
+                <div class="no-data">
+                  <mat-icon>email</mat-icon>
+                  <h3>No hay mensajes</h3>
+                  <p>No se han recibido mensajes de contacto aún</p>
+                </div>
+              } @else {
+                <mat-table [dataSource]="messages" class="mat-elevation-z8">
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                    <mat-cell *matCellDef="let message">{{message.name}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+                    <mat-cell *matCellDef="let message">{{message.email}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="phone">
+                    <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
+                    <mat-cell *matCellDef="let message">{{message.phone}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="message">
+                    <mat-header-cell *matHeaderCellDef>Mensaje</mat-header-cell>
+                    <mat-cell *matCellDef="let message">
+                      <div class="message-preview">{{message.message | slice:0:50}}...</div>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="date">
+                    <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+                    <mat-cell *matCellDef="let message">{{message.date}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+                    <mat-cell *matCellDef="let message">
+                      <button mat-icon-button color="primary" (click)="markAsRead(message)" matTooltip="Marcar como leído">
+                        <mat-icon>mark_email_read</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deleteMessage(message)" matTooltip="Eliminar mensaje">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedMessagesColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedMessagesColumns;"></mat-row>
+                </mat-table>
+              }
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Pestaña de Usuarios -->
+        <mat-tab label="Usuarios">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Usuarios Registrados</h2>
+              <button mat-raised-button color="primary" (click)="exportData()">
+                <mat-icon>download</mat-icon>
+                Exportar
+              </button>
+            </div>
+
+            <div class="clients-table">
+              @if (isLoading) {
+                <div class="loading-spinner">
+                  <mat-spinner diameter="40"></mat-spinner>
+                </div>
+              } @else if (users.length === 0) {
+                <div class="no-data">
+                  <mat-icon>people</mat-icon>
+                  <h3>No hay usuarios</h3>
+                  <p>No hay usuarios registrados en el sistema</p>
+                </div>
+              } @else {
+                <mat-table [dataSource]="users" class="mat-elevation-z8">
+                  <ng-container matColumnDef="username">
+                    <mat-header-cell *matHeaderCellDef>Usuario</mat-header-cell>
+                    <mat-cell *matCellDef="let user">{{user.username}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+                    <mat-cell *matCellDef="let user">{{user.email}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="registration_date">
+                    <mat-header-cell *matHeaderCellDef>Fecha de Registro</mat-header-cell>
+                    <mat-cell *matCellDef="let user">{{user.registration_date}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                    <mat-cell *matCellDef="let user">
+                      <span [class]="'status-badge ' + (user.status === 'Activo' ? 'active' : 'inactive')">
+                        {{user.status}}
+                      </span>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+                    <mat-cell *matCellDef="let user">
+                      <button mat-icon-button color="primary" matTooltip="Ver detalles">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deleteUser(user)" matTooltip="Eliminar usuario">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedUsersColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedUsersColumns;"></mat-row>
+                </mat-table>
+              }
+            </div>
+          </div>
+        </mat-tab>
+
+        <!-- Pestaña de Suscriptores -->
+        <mat-tab label="Suscriptores">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h2>Suscriptores</h2>
+              <button mat-raised-button color="primary" (click)="exportData()">
+                <mat-icon>download</mat-icon>
+                Exportar
+              </button>
+            </div>
+
+            <div class="clients-table">
+              @if (isLoading) {
+                <div class="loading-spinner">
+                  <mat-spinner diameter="40"></mat-spinner>
+                </div>
+              } @else if (subscribers.length === 0) {
+                <div class="no-data">
+                  <mat-icon>notifications</mat-icon>
+                  <h3>No hay suscriptores</h3>
+                  <p>No hay personas suscritas al boletín</p>
+                </div>
+              } @else {
+                <mat-table [dataSource]="subscribers" class="mat-elevation-z8">
+                  <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+                    <mat-cell *matCellDef="let subscriber">{{subscriber.email}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="subscription_date">
+                    <mat-header-cell *matHeaderCellDef>Fecha de Suscripción</mat-header-cell>
+                    <mat-cell *matCellDef="let subscriber">{{subscriber.subscription_date}}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+                    <mat-cell *matCellDef="let subscriber">
+                      <button mat-icon-button color="primary" matTooltip="Enviar email">
+                        <mat-icon>email</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="deleteSubscriber(subscriber)" matTooltip="Eliminar suscriptor">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedSubscribersColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedSubscribersColumns;"></mat-row>
+                </mat-table>
+              }
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>

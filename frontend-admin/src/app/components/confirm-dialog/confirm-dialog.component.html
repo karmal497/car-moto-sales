@@ -1,0 +1,8 @@
+<div class="dialog-container">
+  <h2 class="dialog-title">{{data.title}}</h2>
+  <p class="dialog-message">{{data.message}}</p>
+  <div class="dialog-actions">
+    <button mat-button class="cancel-button" (click)="onNoClick()">Cancelar</button>
+    <button mat-raised-button class="confirm-button" (click)="onYesClick()">Confirmar</button>
+  </div>
+</div>

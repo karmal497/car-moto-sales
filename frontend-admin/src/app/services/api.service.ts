@@ -9,15 +9,28 @@ import { AuthService } from './auth.service';
 export class ApiService {
   private apiUrl = 'http://localhost:8000/api';
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
+  private getFormDataHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    // Para FormData, no establecemos Content-Type, el navegador lo hará automáticamente
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
   }
 
+  // Cars
   getCars(): Observable<any> {
     return this.http.get(`${this.apiUrl}/cars/`, { headers: this.getHeaders() });
   }
@@ -26,18 +39,19 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/cars/${id}/`, { headers: this.getHeaders() });
   }
 
-  createCar(carData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/cars/`, carData, { headers: this.getHeaders() });
+  createCar(car: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/cars/`, car, { headers: this.getFormDataHeaders() });
   }
 
-  updateCar(id: number, carData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/cars/${id}/`, carData, { headers: this.getHeaders() });
+  updateCar(id: number, car: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/cars/${id}/`, car, { headers: this.getFormDataHeaders() });
   }
 
   deleteCar(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/cars/${id}/`, { headers: this.getHeaders() });
   }
 
+  // Motorcycles
   getMotorcycles(): Observable<any> {
     return this.http.get(`${this.apiUrl}/motorcycles/`, { headers: this.getHeaders() });
   }
@@ -46,19 +60,37 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/motorcycles/${id}/`, { headers: this.getHeaders() });
   }
 
-  createMotorcycle(motorcycleData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/motorcycles/`, motorcycleData, { headers: this.getHeaders() });
+  createMotorcycle(motorcycle: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/motorcycles/`, motorcycle, { headers: this.getFormDataHeaders() });
   }
 
-  updateMotorcycle(id: number, motorcycleData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/motorcycles/${id}/`, motorcycleData, { headers: this.getHeaders() });
+  updateMotorcycle(id: number, motorcycle: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/motorcycles/${id}/`, motorcycle, { headers: this.getFormDataHeaders() });
   }
 
   deleteMotorcycle(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/motorcycles/${id}/`, { headers: this.getHeaders() });
   }
 
-  searchVehicles(query: string, type: string = 'all'): Observable<any> {
-    return this.http.get(`${this.apiUrl}/search/?q=${query}&type=${type}`, { headers: this.getHeaders() });
+  // Users
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/`, { headers: this.getHeaders() });
+  }
+
+  // Sales
+  getSales(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/sales/`, { headers: this.getHeaders() });
+  }
+
+  createSale(sale: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/sales/`, sale, { headers: this.getHeaders() });
+  }
+
+  getCarById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/cars/${id}/`);
+  }
+
+  getMotorcycleById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/motorcycles/${id}/`);
   }
 }

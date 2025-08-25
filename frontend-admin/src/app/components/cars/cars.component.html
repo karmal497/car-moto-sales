@@ -1,0 +1,82 @@
+<div class="cars-container">
+  <h1>Gestión de Autos</h1>
+
+  <div class="header-actions">
+    <div class="search-box">
+      <mat-icon style="color: #888;">search</mat-icon>
+      <input type="text" placeholder="Buscar autos..." />
+    </div>
+
+    <button mat-raised-button class="add-button" routerLink="/cars/new">
+      <mat-icon>add</mat-icon> Agregar Auto
+    </button>
+  </div>
+
+  <div class="cars-table">
+    @if (isLoading) {
+      <div class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else if (cars.length === 0) {
+      <div class="no-data">
+        <mat-icon>directions_car</mat-icon>
+        <h3>No hay autos registrados</h3>
+        <p>Comienza agregando el primer auto a tu concesionaria</p>
+      </div>
+    } @else {
+      <mat-table [dataSource]="cars" class="mat-elevation-z8">
+        <ng-container matColumnDef="image">
+          <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
+          <mat-cell *matCellDef="let car">
+            <img [src]="car.image_url" alt="{{car.title}}" class="table-image">
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <mat-header-cell *matHeaderCellDef>Título</mat-header-cell>
+          <mat-cell *matCellDef="let car">{{car.title}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="brand">
+          <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
+          <mat-cell *matCellDef="let car">{{car.brand}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="year">
+          <mat-header-cell *matHeaderCellDef>Año</mat-header-cell>
+          <mat-cell *matCellDef="let car">{{car.year}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
+          <mat-cell *matCellDef="let car">${{car.price | number:'1.0-0'}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+          <mat-cell *matCellDef="let car">
+            <span [class]="car.is_sold ? 'status-sold' : 'status-available'">
+              {{car.is_sold ? 'Vendido' : 'Disponible'}}
+            </span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+          <mat-cell *matCellDef="let car">
+            <button mat-icon-button class="action-button edit-button" [routerLink]="['/cars/edit', car.id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button class="action-button delete-button" (click)="deleteCar(car)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"
+                 [style.background]="row.is_sold ? 'rgba(244, 67, 54, 0.1)' : 'rgba(76, 175, 80, 0.1)'"></mat-row>
+      </mat-table>
+    }
+  </div>
+</div>

@@ -1,0 +1,42 @@
+.dialog-container {
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #1a1a1a 0%, #222222 100%);
+  border-radius: 15px;
+  border: 1px solid #333;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.dialog-title {
+  color: #ff7700;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px rgba(255, 119, 0, 0.3);
+}
+
+.dialog-message {
+  color: #ddd;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.cancel-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ddd !important;
+  border: 1px solid #444 !important;
+}
+
+.confirm-button {
+  background: linear-gradient(45deg, #ff7700, #ff5500) !important;
+  color: white !important;
+  box-shadow: 0 5px 15px rgba(255, 119, 0, 0.4) !important;
+}

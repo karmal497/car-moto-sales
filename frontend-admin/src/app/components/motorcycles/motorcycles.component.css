@@ -1,0 +1,237 @@
+.motorcycles-container {
+  padding: 20px;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  min-height: calc(100vh - 64px);
+  color: #fff;
+  font-family: 'Roboto', sans-serif;
+}
+
+.motorcycles-container h1 {
+  color: #fff;
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 119, 0, 0.5);
+  font-family: 'Orbitron', sans-serif;
+  position: relative;
+  display: inline-block;
+}
+
+.motorcycles-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff7700, transparent);
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  padding: 5px 15px;
+  border: 1px solid #333;
+  transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+  border-color: #ff7700;
+  box-shadow: 0 0 10px rgba(255, 119, 0, 0.3);
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  outline: none;
+  min-width: 250px;
+}
+
+.search-box input::placeholder {
+  color: #888;
+}
+
+.add-button {
+  background: linear-gradient(45deg, #ff7700, #ff5500) !important;
+  color: white !important;
+  border: none;
+  border-radius: 50px !important;
+  padding: 10px 20px !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 5px 15px rgba(255, 119, 0, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.add-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 119, 0, 0.6) !important;
+}
+
+.add-button:active {
+  transform: translateY(1px);
+}
+
+.motorcycles-table {
+  background: rgba(26, 26, 26, 0.8);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid #333;
+}
+
+.mat-header-cell {
+  color: #ff7700 !important;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+.mat-cell {
+  color: #ddd !important;
+}
+
+.table-image {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  border: 1px solid #444;
+}
+
+.table-image:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 119, 0, 0.5);
+}
+
+.status-available {
+  color: #4caf50;
+  font-weight: 500;
+  text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.status-sold {
+  color: #f44336;
+  font-weight: 500;
+  text-shadow: 0 0 5px rgba(244, 67, 54, 0.5);
+}
+
+.action-button {
+  min-width: auto !important;
+  padding: 4px !important;
+  margin: 0 5px !important;
+  transition: all 0.3s ease !important;
+}
+
+.edit-button {
+  color: #ff7700 !important;
+}
+
+.edit-button:hover {
+  background: rgba(255, 119, 0, 0.1) !important;
+  transform: scale(1.1);
+}
+
+.delete-button {
+  color: #f44336 !important;
+}
+
+.delete-button:hover {
+  background: rgba(244, 67, 54, 0.1) !important;
+  transform: scale(1.1);
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
+
+.no-data mat-icon {
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #ff7700;
+}
+
+.mat-row {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mat-row:hover {
+  background: rgba(255, 119, 0, 0.05) !important;
+  transform: translateX(5px);
+}
+
+.mat-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .search-box input {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .displayed-columns {
+    display: none;
+  }
+
+  .motorcycles-table {
+    overflow-x: auto;
+  }
+
+  .mat-table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .motorcycles-container {
+    padding: 10px;
+  }
+
+  .motorcycles-container h1 {
+    font-size: 1.8rem;
+  }
+}

@@ -1,0 +1,252 @@
+.clients-container {
+  padding: 20px;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  min-height: calc(100vh - 64px);
+  color: #fff;
+}
+
+.clients-container h1 {
+  color: #fff;
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(255, 119, 0, 0.5);
+  font-family: 'Orbitron', sans-serif;
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.clients-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff7700, transparent);
+}
+
+.clients-card {
+  background: rgba(26, 26, 26, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 119, 0, 0.2) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+::ng-deep .mat-tab-group {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+::ng-deep .mat-tab-header {
+  background: rgba(40, 40, 40, 0.8);
+  border-bottom: 1px solid rgba(255, 119, 0, 0.2);
+}
+
+::ng-deep .mat-tab-label {
+  color: #ddd !important;
+  opacity: 1 !important;
+  font-weight: 500;
+}
+
+::ng-deep .mat-tab-label-active {
+  color: #ff7700 !important;
+}
+
+::ng-deep .mat-ink-bar {
+  background-color: #ff7700 !important;
+  height: 3px !important;
+}
+
+.tab-content {
+  padding: 20px;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.tab-header h2 {
+  color: #fff;
+  margin: 0;
+  font-weight: 600;
+  position: relative;
+  padding-left: 15px;
+}
+
+.tab-header h2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 25px;
+  background: linear-gradient(to bottom, #ff7700, #ff5500);
+  border-radius: 3px;
+}
+
+.tab-header button {
+  background: linear-gradient(45deg, #ff7700, #ff5500) !important;
+  color: white !important;
+  border: none;
+  border-radius: 50px !important;
+  padding: 0 20px !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 5px 15px rgba(255, 119, 0, 0.4) !important;
+  transition: all 0.3s ease !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-header button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 119, 0, 0.6) !important;
+}
+
+.clients-table {
+  position: relative;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #888;
+  text-align: center;
+}
+
+.no-data mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 15px;
+  opacity: 0.5;
+}
+
+.no-data h3 {
+  margin: 0 0 10px 0;
+  font-weight: 500;
+}
+
+.no-data p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+::ng-deep .mat-table {
+  background: rgba(30, 30, 30, 0.7) !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+::ng-deep .mat-header-cell {
+  color: #ff7700 !important;
+  font-weight: 600 !important;
+  font-size: 14px;
+  background: rgba(40, 40, 40, 0.9) !important;
+}
+
+::ng-deep .mat-cell {
+  color: #ddd !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+::ng-deep .mat-row {
+  background: rgba(35, 35, 35, 0.5) !important;
+  transition: background-color 0.3s ease;
+}
+
+::ng-deep .mat-row:hover {
+  background: rgba(50, 50, 50, 0.7) !important;
+}
+
+.message-preview {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.5);
+}
+
+.status-badge.inactive {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.5);
+}
+
+::ng-deep .mat-paginator {
+  background: rgba(40, 40, 40, 0.9) !important;
+  color: #ddd !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::ng-deep .mat-paginator-page-size-label,
+::ng-deep .mat-paginator-range-label {
+  color: #ddd !important;
+}
+
+::ng-deep .mat-icon-button[disabled] {
+  opacity: 0.4 !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .clients-container {
+    padding: 10px;
+  }
+
+  .tab-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tab-header button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  ::ng-deep .mat-table {
+    overflow-x: auto;
+    display: block;
+    width: 100%;
+  }
+
+  .message-preview {
+    max-width: 150px;
+  }
+}
