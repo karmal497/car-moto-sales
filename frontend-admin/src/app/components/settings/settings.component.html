@@ -1,0 +1,360 @@
+<div class="settings-container">
+  <h1>Configuraciones del Sistema</h1>
+
+  <mat-tab-group class="settings-tabs" animationDuration="500ms">
+    <!-- Pestaña General -->
+    <mat-tab label="General">
+      <mat-card class="settings-card">
+        <mat-card-header>
+          <mat-card-title>Configuración General</mat-card-title>
+          <mat-card-subtitle>Ajustes básicos del sistema</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+          <form [formGroup]="generalForm" class="settings-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Nombre de la Empresa</mat-label>
+                <input matInput formControlName="companyName">
+                <mat-icon matSuffix>business</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Email de Contacto</mat-label>
+                <input matInput type="email" formControlName="email">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="generalForm.get('email')?.hasError('email')">
+                  Introduce un email válido
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Teléfono</mat-label>
+                <input matInput formControlName="phone">
+                <mat-icon matSuffix>phone</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Moneda</mat-label>
+                <mat-select formControlName="currency">
+                  <mat-option value="USD">USD ($)</mat-option>
+                  <mat-option value="EUR">EUR (€)</mat-option>
+                  <mat-option value="GBP">GBP (£)</mat-option>
+                  <mat-option value="JPY">JPY (¥)</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field full-width">
+                <mat-label>Dirección</mat-label>
+                <textarea matInput formControlName="address" rows="2"></textarea>
+                <mat-icon matSuffix>location_on</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Zona Horaria</mat-label>
+                <mat-select formControlName="timezone">
+                  <mat-option value="America/New_York">EST (New York)</mat-option>
+                  <mat-option value="America/Chicago">CST (Chicago)</mat-option>
+                  <mat-option value="America/Denver">MST (Denver)</mat-option>
+                  <mat-option value="America/Los_Angeles">PST (Los Angeles)</mat-option>
+                  <mat-option value="Europe/Madrid">CET (Madrid)</mat-option>
+                  <mat-option value="Europe/London">GMT (London)</mat-option>
+                  <mat-option value="Asia/Tokyo">JST (Tokyo)</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="saveGeneralSettings()" [disabled]="!generalForm.valid">
+            <mat-icon>save</mat-icon> Guardar
+          </button>
+          <button mat-button (click)="generalForm.reset()">
+            <mat-icon>refresh</mat-icon> Restablecer
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+    <!-- Pestaña Apariencia -->
+    <mat-tab label="Apariencia">
+      <mat-card class="settings-card">
+        <mat-card-header>
+          <mat-card-title>Apariencia y Tema</mat-card-title>
+          <mat-card-subtitle>Personaliza la apariencia del sistema</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+          <form [formGroup]="appearanceForm" class="settings-form">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Tema</mat-label>
+                <mat-select formControlName="theme">
+                  <mat-option value="dark">Oscuro</mat-option>
+                  <mat-option value="light">Claro</mat-option>
+                  <mat-option value="auto">Automático</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Fuente</mat-label>
+                <mat-select formControlName="font">
+                  <mat-option value="Roboto">Roboto</mat-option>
+                  <mat-option value="Open Sans">Open Sans</mat-option>
+                  <mat-option value="Lato">Lato</mat-option>
+                  <mat-option value="Montserrat">Montserrat</mat-option>
+                  <mat-option value="Poppins">Poppins</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <div class="color-picker">
+                <label>Color Primario</label>
+                <div class="color-input">
+                  <input type="color" formControlName="primaryColor">
+                  <span>{{appearanceForm.get('primaryColor')?.value}}</span>
+                </div>
+              </div>
+
+              <div class="color-picker">
+                <label>Color Secundario</label>
+                <div class="color-input">
+                  <input type="color" formControlName="secondaryColor">
+                  <span>{{appearanceForm.get('secondaryColor')?.value}}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="logo-upload">
+              <h3>Logo del Sistema</h3>
+              <div class="upload-container">
+                <div class="logo-preview" *ngIf="previewUrl">
+                  <img [src]="previewUrl" alt="Logo preview">
+                </div>
+                <div class="upload-controls">
+                  <input type="file" #logoInput (change)="onFileSelected($event)" accept="image/*" hidden>
+                  <button mat-raised-button (click)="logoInput.click()">
+                    <mat-icon>upload</mat-icon> Seleccionar Logo
+                  </button>
+                  <button mat-raised-button color="primary" (click)="uploadLogo()" [disabled]="!selectedFile">
+                    <mat-icon>cloud_upload</mat-icon> Subir Logo
+                  </button>
+                  <p>Formatos soportados: JPG, PNG, SVG. Tamaño máximo: 2MB</p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="saveAppearanceSettings()" [disabled]="!appearanceForm.valid">
+            <mat-icon>save</mat-icon> Guardar
+          </button>
+          <button mat-button (click)="appearanceForm.reset()">
+            <mat-icon>refresh</mat-icon> Restablecer
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+    <!-- Pestaña Notificaciones -->
+    <mat-tab label="Notificaciones">
+      <mat-card class="settings-card">
+        <mat-card-header>
+          <mat-card-title>Configuración de Notificaciones</mat-card-title>
+          <mat-card-subtitle>Gestiona las notificaciones del sistema</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+          <form [formGroup]="notificationsForm" class="settings-form">
+            <div class="notification-item">
+              <div class="notification-info">
+                <mat-icon>email</mat-icon>
+                <div>
+                  <h4>Notificaciones por Email</h4>
+                  <p>Recibir notificaciones importantes por correo electrónico</p>
+                </div>
+              </div>
+              <mat-slide-toggle formControlName="emailNotifications" color="primary"></mat-slide-toggle>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="notification-item">
+              <div class="notification-info">
+                <mat-icon>point_of_sale</mat-icon>
+                <div>
+                  <h4>Notificaciones de Ventas</h4>
+                  <p>Alertas sobre nuevas ventas y transacciones importantes</p>
+                </div>
+              </div>
+              <mat-slide-toggle formControlName="salesNotifications" color="primary"></mat-slide-toggle>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="notification-item">
+              <div class="notification-info">
+                <mat-icon>inventory</mat-icon>
+                <div>
+                  <h4>Notificaciones de Inventario</h4>
+                  <p>Alertas sobre stock bajo y nuevos ingresos de inventario</p>
+                </div>
+              </div>
+              <mat-slide-toggle formControlName="inventoryNotifications" color="primary"></mat-slide-toggle>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="notification-item">
+              <div class="notification-info">
+                <mat-icon>campaign</mat-icon>
+                <div>
+                  <h4>Notificaciones de Marketing</h4>
+                  <p>Informes de campañas de marketing y resultados</p>
+                </div>
+              </div>
+              <mat-slide-toggle formControlName="marketingNotifications" color="primary"></mat-slide-toggle>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="notification-item">
+              <div class="notification-info">
+                <mat-icon>security</mat-icon>
+                <div>
+                  <h4>Notificaciones de Seguridad</h4>
+                  <p>Alertas sobre actividades de seguridad importantes</p>
+                </div>
+              </div>
+              <mat-slide-toggle formControlName="securityNotifications" color="primary"></mat-slide-toggle>
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="saveNotificationSettings()">
+            <mat-icon>save</mat-icon> Guardar
+          </button>
+          <button mat-button (click)="notificationsForm.reset()">
+            <mat-icon>refresh</mat-icon> Restablecer
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+
+    <!-- Pestaña Seguridad -->
+    <mat-tab label="Seguridad">
+      <mat-card class="settings-card">
+        <mat-card-header>
+          <mat-card-title>Configuración de Seguridad</mat-card-title>
+          <mat-card-subtitle>Ajustes de seguridad y privacidad</mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content>
+          <form [formGroup]="securityForm" class="settings-form">
+            <div class="security-item">
+              <div class="security-info">
+                <mat-icon>enhanced_encryption</mat-icon>
+                <div>
+                  <h4>Autenticación de Dos Factores</h4>
+                  <p>Protege tu cuenta con una capa adicional de seguridad</p>
+                </div>
+              </div>
+              <mat-slide-toggle formControlName="twoFactorAuth" color="primary"></mat-slide-toggle>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="security-item">
+              <div class="security-info">
+                <mat-icon>timer</mat-icon>
+                <div>
+                  <h4>Tiempo de Espera de Sesión</h4>
+                  <p>Tiempo en minutos antes de que la sesión expire por inactividad</p>
+                </div>
+              </div>
+              <mat-form-field appearance="outline" class="number-field">
+                <input matInput type="number" formControlName="sessionTimeout" min="5" max="120">
+                <span matSuffix>minutos</span>
+                <mat-error *ngIf="securityForm.get('sessionTimeout')?.hasError('min')">
+                  Mínimo 5 minutos
+                </mat-error>
+                <mat-error *ngIf="securityForm.get('sessionTimeout')?.hasError('max')">
+                  Máximo 120 minutos
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="security-item">
+              <div class="security-info">
+                <mat-icon>password</mat-icon>
+                <div>
+                  <h4>Caducidad de Contraseña</h4>
+                  <p>Días antes de que la contraseña deba ser cambiada</p>
+                </div>
+              </div>
+              <mat-form-field appearance="outline" class="number-field">
+                <input matInput type="number" formControlName="passwordExpiry" min="30" max="365">
+                <span matSuffix>días</span>
+                <mat-error *ngIf="securityForm.get('passwordExpiry')?.hasError('min')">
+                  Mínimo 30 días
+                </mat-error>
+                <mat-error *ngIf="securityForm.get('passwordExpiry')?.hasError('max')">
+                  Máximo 365 días
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="security-item">
+              <div class="security-info">
+                <mat-icon>lock</mat-icon>
+                <div>
+                  <h4>Intentos de Login</h4>
+                  <p>Número máximo de intentos fallidos antes del bloqueo</p>
+                </div>
+              </div>
+              <mat-form-field appearance="outline" class="number-field">
+                <input matInput type="number" formControlName="loginAttempts" min="3" max="10">
+                <span matSuffix>intentos</span>
+                <mat-error *ngIf="securityForm.get('loginAttempts')?.hasError('min')">
+                  Mínimo 3 intentos
+                </mat-error>
+                <mat-error *ngIf="securityForm.get('loginAttempts')?.hasError('max')">
+                  Máximo 10 intentos
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="saveSecuritySettings()" [disabled]="!securityForm.valid">
+            <mat-icon>save</mat-icon> Guardar
+          </button>
+          <button mat-button (click)="securityForm.reset()">
+            <mat-icon>refresh</mat-icon> Restablecer
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+
+  <div class="global-actions">
+    <button mat-raised-button color="warn" (click)="resetSettings()">
+      <mat-icon>restart_alt</mat-icon> Restablecer Todo
+    </button>
+  </div>
+</div>

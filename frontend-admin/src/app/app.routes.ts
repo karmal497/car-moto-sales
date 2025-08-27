@@ -9,6 +9,10 @@ import { CarsComponent } from './components/cars/cars.component';
 import { MotorcyclesComponent } from './components/motorcycles/motorcycles.component';
 import { CarFormComponent } from './components/car-form/car-form.component';
 import { MotorcycleFormComponent } from './components/motorcycle-form/motorcycle-form.component';
+import { ClientsComponent } from './components/clients/clients.component';
+import { DiscountsComponent } from './components/discounts/discounts.component';
+import { FeaturedComponent } from './components/featured/featured.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -27,6 +31,10 @@ export const routes: Routes = [
       { path: 'motorcycles', component: MotorcyclesComponent },
       { path: 'motorcycles/new', component: MotorcycleFormComponent },
       { path: 'motorcycles/edit/:id', component: MotorcycleFormComponent },
+      { path: 'clients', component: ClientsComponent },
+      { path: 'marketing/featured', component: FeaturedComponent },
+      { path: 'marketing/discounts', component: DiscountsComponent },
+      { path: 'settings', component: SettingsComponent }
     ]
   },
   { path: '**', redirectTo: '/dashboard' }

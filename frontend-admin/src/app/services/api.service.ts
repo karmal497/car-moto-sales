@@ -93,4 +93,9 @@ export class ApiService {
   getMotorcycleById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/motorcycles/${id}/`);
   }
+
+  // Settings
+  updateSettings(settings: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/settings/`, settings, { headers: this.getHeaders() });
+  }
 }

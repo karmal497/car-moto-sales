@@ -1,0 +1,123 @@
+<div class="marketing-container">
+  <h1>Vehículos Destacados</h1>
+
+  <mat-card class="marketing-card">
+    <mat-card-content>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="openSelectionPanel()">
+          <mat-icon>add</mat-icon> Agregar Destacados
+        </button>
+      </div>
+
+      <div class="table-container">
+        @if (isLoading) {
+          <div class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        } @else if (featuredItems.length === 0) {
+          <div class="no-data">
+            <mat-icon>star</mat-icon>
+            <h3>No hay vehículos destacados</h3>
+            <p>Comienza agregando vehículos a destacados</p>
+          </div>
+        } @else {
+          <mat-table [dataSource]="featuredItems" class="mat-elevation-z8">
+            <ng-container matColumnDef="image">
+              <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <img [src]="item.image_url" alt="{{item.title}}" class="table-image">
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="title">
+              <mat-header-cell *matHeaderCellDef>Vehículo</mat-header-cell>
+              <mat-cell *matCellDef="let item">{{item.title}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
+              <mat-cell *matCellDef="let item">{{item.type}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+              <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
+              <mat-cell *matCellDef="let item">${{item.price | number:'1.0-0'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <button mat-icon-button color="warn" (click)="removeFeaturedItem(item)" matTooltip="Eliminar de destacados">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Panel de selección de vehículos destacados -->
+  @if (showSelectionPanel) {
+    <div class="overlay-panel">
+      <mat-card class="selection-panel">
+        <mat-card-header>
+          <mat-card-title>Seleccionar Vehículos Destacados</mat-card-title>
+          <button mat-icon-button (click)="closeSelectionPanel()" class="close-button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="selection-container">
+            <div class="vehicle-section">
+              <h3>Autos</h3>
+              <div class="vehicle-list">
+                @for (car of cars; track car.id) {
+                  <mat-card class="vehicle-card">
+                    <img [src]="car.image_url" alt="{{car.title}}" class="vehicle-image">
+                    <mat-card-content>
+                      <h4>{{car.title}}</h4>
+                      <p>${{car.price | number:'1.0-0'}}</p>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-raised-button color="primary" (click)="addCarToFeatured(car)">
+                        <mat-icon>star</mat-icon> Destacar
+                      </button>
+                    </mat-card-actions>
+                  </mat-card>
+                }
+              </div>
+            </div>
+
+            <div class="vehicle-section">
+              <h3>Motos</h3>
+              <div class="vehicle-list">
+                @for (motorcycle of motorcycles; track motorcycle.id) {
+                  <mat-card class="vehicle-card">
+                    <img [src]="motorcycle.image_url" alt="{{motorcycle.title}}" class="vehicle-image">
+                    <mat-card-content>
+                      <h4>{{motorcycle.title}}</h4>
+                      <p>${{motorcycle.price | number:'1.0-0'}}</p>
+                    </mat-card-content>
+                    <mat-card-actions>
+                      <button mat-raised-button color="primary" (click)="addMotorcycleToFeatured(motorcycle)">
+                        <mat-icon>star</mat-icon> Destacar
+                      </button>
+                    </mat-card-actions>
+                  </mat-card>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button mat-raised-button (click)="closeSelectionPanel()">Cerrar</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

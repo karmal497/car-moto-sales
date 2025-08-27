@@ -1,29 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-motorcycles',
   templateUrl: './motorcycles.component.html',
   styleUrls: ['./motorcycles.component.css'],
   imports: [
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDialogModule,
     CommonModule,
     RouterModule,
-    MatCardModule,
-    MatProgressSpinnerModule
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatTableModule
   ]
 })
 export class MotorcyclesComponent implements OnInit {

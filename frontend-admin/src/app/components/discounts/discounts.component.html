@@ -1,0 +1,197 @@
+<div class="marketing-container">
+  <h1>Gestión de Descuentos</h1>
+
+  <mat-card class="marketing-card">
+    <mat-card-content>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" (click)="openSelectionPanel()">
+          <mat-icon>add</mat-icon> Agregar Descuentos
+        </button>
+      </div>
+
+      <div class="table-container">
+        @if (isLoading) {
+          <div class="loading-spinner">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        } @else if (discounts.length === 0) {
+          <div class="no-data">
+            <mat-icon>local_offer</mat-icon>
+            <h3>No hay descuentos activos</h3>
+            <p>Comienza agregando descuentos a tus vehículos</p>
+          </div>
+        } @else {
+          <mat-table [dataSource]="discounts" class="mat-elevation-z8">
+            <ng-container matColumnDef="image">
+              <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <img [src]="item.image_url" alt="{{item.title}}" class="table-image">
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="title">
+              <mat-header-cell *matHeaderCellDef>Vehículo</mat-header-cell>
+              <mat-cell *matCellDef="let item">{{item.title}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
+              <mat-cell *matCellDef="let item">{{item.type}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="original_price">
+              <mat-header-cell *matHeaderCellDef>Precio Original</mat-header-cell>
+              <mat-cell *matCellDef="let item">${{item.original_price | number:'1.0-0'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="discount">
+              <mat-header-cell *matHeaderCellDef>Descuento</mat-header-cell>
+              <mat-cell *matCellDef="let item">{{item.discount_percentage}}%</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="new_price">
+              <mat-header-cell *matHeaderCellDef>Precio con Descuento</mat-header-cell>
+              <mat-cell *matCellDef="let item">${{item.new_price | number:'1.0-0'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="duration">
+              <mat-header-cell *matHeaderCellDef>Duración</mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                {{item.start_date | date:'shortDate'}} - {{item.end_date | date:'shortDate'}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+              <mat-cell *matCellDef="let item">
+                <button mat-icon-button color="warn" (click)="deleteDiscount(item)" matTooltip="Eliminar descuento">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Panel de selección de vehículos -->
+  @if (showSelectionPanel) {
+    <div class="overlay-panel">
+      <mat-card class="selection-panel">
+        <mat-card-header>
+          <mat-card-title>Seleccionar Vehículos para Descuento</mat-card-title>
+          <button mat-icon-button (click)="closeSelectionPanel()" class="close-button">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="selection-container">
+            <div class="vehicle-section">
+              <h3>Autos ({{selectedCars.length}}/7 seleccionados)</h3>
+              <div class="vehicle-list">
+                @for (car of cars; track car.id) {
+                  <mat-card
+                    [class.selected]="isCarSelected(car)"
+                    (click)="toggleCarSelection(car)"
+                    class="vehicle-card">
+                    <img [src]="car.image_url" alt="{{car.title}}" class="vehicle-image">
+                    <mat-card-content>
+                      <h4>{{car.title}}</h4>
+                      <p>${{car.price | number:'1.0-0'}}</p>
+                    </mat-card-content>
+                  </mat-card>
+                }
+              </div>
+            </div>
+
+            <div class="vehicle-section">
+              <h3>Motos ({{selectedMotorcycles.length}}/7 seleccionadas)</h3>
+              <div class="vehicle-list">
+                @for (motorcycle of motorcycles; track motorcycle.id) {
+                  <mat-card
+                    [class.selected]="isMotorcycleSelected(motorcycle)"
+                    (click)="toggleMotorcycleSelection(motorcycle)"
+                    class="vehicle-card">
+                    <img [src]="motorcycle.image_url" alt="{{motorcycle.title}}" class="vehicle-image">
+                    <mat-card-content>
+                      <h4>{{motorcycle.title}}</h4>
+                      <p>${{motorcycle.price | number:'1.0-0'}}</p>
+                    </mat-card-content>
+                  </mat-card>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button mat-button (click)="closeSelectionPanel()">Cancelar</button>
+            <button mat-raised-button color="primary" (click)="proceedToDiscount()">Continuar</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  <!-- Panel de configuración de descuento -->
+  @if (showDiscountPanel) {
+    <div class="overlay-panel">
+      <mat-card class="discount-panel">
+        <mat-card-header>
+          <mat-card-title>Configurar Descuento</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="discountForm" class="discount-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Porcentaje de Descuento</mat-label>
+              <input matInput type="number" formControlName="discount_percentage" min="1" max="100">
+              <span matSuffix>%</span>
+              <mat-error *ngIf="discountForm.get('discount_percentage')?.hasError('required')">
+                El porcentaje es requerido
+              </mat-error>
+              <mat-error *ngIf="discountForm.get('discount_percentage')?.hasError('min') || discountForm.get('discount_percentage')?.hasError('max')">
+                El porcentaje debe estar entre 1 y 100
+              </mat-error>
+            </mat-form-field>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Fecha de Inicio</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="start_date">
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+                <mat-error *ngIf="discountForm.get('start_date')?.hasError('required')">
+                  La fecha de inicio es requerida
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Fecha de Fin</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="end_date">
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+                <mat-error *ngIf="discountForm.get('end_date')?.hasError('required')">
+                  La fecha de fin es requerida
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="selected-summary">
+              <h4>Vehículos seleccionados:</h4>
+              <p>{{selectedCars.length}} autos y {{selectedMotorcycles.length}} motos</p>
+            </div>
+
+            <div class="panel-actions">
+              <button mat-button (click)="showDiscountPanel = false">Cancelar</button>
+              <button mat-raised-button color="primary" (click)="applyDiscount()" [disabled]="!discountForm.valid">
+                Aplicar Descuento
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

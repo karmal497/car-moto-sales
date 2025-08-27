@@ -20,6 +20,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
 
 // Components
 import { AppComponent } from './app.component';
@@ -33,6 +37,10 @@ import { LoginComponent } from './components/login/login.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
+import { ClientsComponent } from './components/clients/clients.component';
+import { DiscountsComponent } from './components/discounts/discounts.component';
+import { FeaturedComponent } from './components/featured/featured.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -49,7 +57,11 @@ import { AppRoutingModule } from './app-routing.module';
     LoginComponent,
     LayoutComponent,
     RegisterComponent,
-    SplashScreenComponent
+    SplashScreenComponent,
+    ClientsComponent,
+    DiscountsComponent,
+    FeaturedComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +85,11 @@ import { AppRoutingModule } from './app-routing.module';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatSnackBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatMenuModule,
+    MatBadgeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -23,20 +23,19 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" [opened]="isSidenavOpen" class="sidenav">
       <div class="sidenav-content">
-
-
         <mat-nav-list>
           <a mat-list-item *ngFor="let item of menuItems"
              [routerLink]="item.children ? null : item.route"
              routerLinkActive="active"
-             (click)="item.children && toggleMarketingMenu()">
+             (click)="item.children && (item.name === 'Marketing' ? toggleMarketingMenu() : null)">
             <mat-icon matListIcon>{{item.icon}}</mat-icon>
             <span matLine>{{item.name}}</span>
             <mat-icon *ngIf="item.children" class="expand-icon">
-              {{marketingMenuOpen ? 'expand_less' : 'expand_more'}}
+              {{(item.name === 'Marketing' && marketingMenuOpen) ? 'expand_less' : 'expand_more'}}
             </mat-icon>
           </a>
 
+          <!-- Submenú de Marketing -->
           <div *ngIf="marketingMenuOpen" class="submenu">
             <a mat-list-item *ngFor="let child of menuItems[4].children"
                [routerLink]="child.route"
