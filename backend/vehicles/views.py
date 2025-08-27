@@ -128,6 +128,7 @@ class ContactMessageListCreateView(generics.ListCreateAPIView):
 class ContactMessageDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 class SubscriberListCreateView(generics.ListCreateAPIView):
     queryset = Subscriber.objects.all().order_by('-subscription_date')

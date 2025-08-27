@@ -1,8 +1,8 @@
-// contact.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from '../../services/api.service';
 
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
@@ -41,7 +41,8 @@ export class ContactComponent {
 
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private apiService: ApiService
   ) {
     this.contactForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -57,17 +58,35 @@ export class ContactComponent {
     if (this.contactForm.valid) {
       this.isLoading = true;
 
-      // Simular envío del formulario
-      setTimeout(() => {
-        this.snackBar.open('Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.', 'Cerrar', {
-          duration: 5000,
-          panelClass: ['success-snackbar']
-        });
-        this.contactForm.reset({
-          contactMethod: 'whatsapp'
-        });
-        this.isLoading = false;
-      }, 2000);
+      // Preparar datos para enviar (sin el campo contactMethod que no existe en el modelo)
+      const formData = {
+        name: this.contactForm.value.name,
+        email: this.contactForm.value.email,
+        phone: this.contactForm.value.phone,
+        message: `Método de contacto preferido: ${this.contactForm.value.contactMethod}\n\nAsunto: ${this.contactForm.value.subject}\n\nMensaje: ${this.contactForm.value.message}`
+      };
+
+      // Enviar mensaje a la API
+      this.apiService.createContactMessage(formData).subscribe({
+        next: (response) => {
+          this.snackBar.open('Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.', 'Cerrar', {
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          });
+          this.contactForm.reset({
+            contactMethod: 'whatsapp'
+          });
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error al enviar el mensaje:', error);
+          this.snackBar.open('Error al enviar el mensaje. Por favor, intenta nuevamente.', 'Cerrar', {
+            duration: 5000,
+            panelClass: ['error-snackbar']
+          });
+          this.isLoading = false;
+        }
+      });
     }
   }
 

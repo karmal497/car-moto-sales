@@ -54,31 +54,59 @@ export class ClientsComponent implements OnInit {
   loadData(): void {
     this.isLoading = true;
 
-    // Simulando carga de datos - en una aplicación real, estos vendrían de endpoints API
-    setTimeout(() => {
-      // Datos de ejemplo para mensajes
-      this.messages = [
-        { id: 1, name: 'Juan Pérez', email: 'juan@example.com', phone: '1234567890', message: 'Me interesa el Audi A4, ¿tienen disponible?', date: '2023-10-15' },
-        { id: 2, name: 'María García', email: 'maria@example.com', phone: '0987654321', message: 'Quiero información sobre financiamiento para la Honda CB500', date: '2023-10-14' },
-        { id: 3, name: 'Carlos López', email: 'carlos@example.com', phone: '5551234567', message: '¿Tienen servicio de mantenimiento para BMW?', date: '2023-10-13' }
-      ];
+    // Cargar mensajes de contacto
+    this.apiService.getContactMessages().subscribe({
+      next: (messages: any[]) => {
+        this.messages = messages.map(message => ({
+          id: message.id,
+          name: message.name,
+          email: message.email,
+          phone: message.phone,
+          message: message.message,
+          date: new Date(message.date).toLocaleDateString('es-ES'),
+          is_read: message.is_read
+        }));
+      },
+      error: (error) => {
+        console.error('Error al cargar mensajes:', error);
+        this.snackBar.open('Error al cargar mensajes', 'Cerrar', { duration: 3000 });
+      }
+    });
 
-      // Datos de ejemplo para usuarios
-      this.users = [
-        { id: 1, username: 'juanperez', email: 'juan@example.com', registration_date: '2023-09-01', status: 'Activo' },
-        { id: 2, username: 'mariagarcia', email: 'maria@example.com', registration_date: '2023-08-15', status: 'Activo' },
-        { id: 3, username: 'carloslopez', email: 'carlos@example.com', registration_date: '2023-10-05', status: 'Inactivo' }
-      ];
+    // Cargar usuarios
+    this.apiService.getUsers().subscribe({
+      next: (users: any[]) => {
+        this.users = users.map(user => ({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          registration_date: new Date(user.date_joined).toLocaleDateString('es-ES'),
+          status: user.is_active ? 'Activo' : 'Inactivo'
+        }));
+      },
+      error: (error) => {
+        console.error('Error al cargar usuarios:', error);
+        this.snackBar.open('Error al cargar usuarios', 'Cerrar', { duration: 3000 });
+      }
+    });
 
-      // Datos de ejemplo para suscriptores
-      this.subscribers = [
-        { id: 1, email: 'suscriptor1@example.com', subscription_date: '2023-10-10' },
-        { id: 2, email: 'suscriptor2@example.com', subscription_date: '2023-10-08' },
-        { id: 3, email: 'suscriptor3@example.com', subscription_date: '2023-10-05' }
-      ];
-
-      this.isLoading = false;
-    }, 1000);
+    // Cargar suscriptores
+    this.apiService.getSubscribers().subscribe({
+      next: (subscribers: any[]) => {
+        this.subscribers = subscribers.map(subscriber => ({
+          id: subscriber.id,
+          email: subscriber.email,
+          subscription_date: new Date(subscriber.subscription_date).toLocaleDateString('es-ES'),
+          is_active: subscriber.is_active
+        }));
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar suscriptores:', error);
+        this.snackBar.open('Error al cargar suscriptores', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
+      }
+    });
   }
 
   deleteMessage(message: any): void {
@@ -92,8 +120,16 @@ export class ClientsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.messages = this.messages.filter(m => m.id !== message.id);
-        this.snackBar.open('Mensaje eliminado correctamente', 'Cerrar', { duration: 3000 });
+        this.apiService.deleteContactMessage(message.id).subscribe({
+          next: () => {
+            this.messages = this.messages.filter(m => m.id !== message.id);
+            this.snackBar.open('Mensaje eliminado correctamente', 'Cerrar', { duration: 3000 });
+          },
+          error: (error) => {
+            console.error('Error al eliminar mensaje:', error);
+            this.snackBar.open('Error al eliminar mensaje', 'Cerrar', { duration: 3000 });
+          }
+        });
       }
     });
   }
@@ -109,8 +145,8 @@ export class ClientsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.users = this.users.filter(u => u.id !== user.id);
-        this.snackBar.open('Usuario eliminado correctamente', 'Cerrar', { duration: 3000 });
+        // Nota: En una aplicación real, necesitarías un endpoint para eliminar usuarios
+        this.snackBar.open('Funcionalidad de eliminación de usuarios no implementada', 'Cerrar', { duration: 3000 });
       }
     });
   }
@@ -126,19 +162,85 @@ export class ClientsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.subscribers = this.subscribers.filter(s => s.id !== subscriber.id);
-        this.snackBar.open('Suscriptor eliminado correctamente', 'Cerrar', { duration: 3000 });
+        this.apiService.deleteSubscriber(subscriber.id).subscribe({
+          next: () => {
+            this.subscribers = this.subscribers.filter(s => s.id !== subscriber.id);
+            this.snackBar.open('Suscriptor eliminado correctamente', 'Cerrar', { duration: 3000 });
+          },
+          error: (error) => {
+            console.error('Error al eliminar suscriptor:', error);
+            this.snackBar.open('Error al eliminar suscriptor', 'Cerrar', { duration: 3000 });
+          }
+        });
       }
     });
   }
 
   markAsRead(message: any): void {
-    // Lógica para marcar mensaje como leído
-    this.snackBar.open('Mensaje marcado como leído', 'Cerrar', { duration: 2000 });
+    this.apiService.updateContactMessage(message.id, { is_read: true }).subscribe({
+      next: () => {
+        message.is_read = true;
+        this.snackBar.open('Mensaje marcado como leído', 'Cerrar', { duration: 2000 });
+      },
+      error: (error) => {
+        console.error('Error al marcar mensaje como leído:', error);
+        this.snackBar.open('Error al marcar mensaje como leído', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 
   exportData(): void {
-    // Lógica para exportar datos
-    this.snackBar.open('Datos exportados correctamente', 'Cerrar', { duration: 3000 });
+    // Lógica para exportar datos según la pestaña seleccionada
+    switch (this.selectedTabIndex) {
+      case 0: // Mensajes
+        this.exportMessages();
+        break;
+      case 1: // Usuarios
+        this.exportUsers();
+        break;
+      case 2: // Suscriptores
+        this.exportSubscribers();
+        break;
+    }
+  }
+
+  private exportMessages(): void {
+    const csvContent = this.convertToCSV(this.messages, ['name', 'email', 'phone', 'message', 'date']);
+    this.downloadCSV(csvContent, 'mensajes_contacto.csv');
+    this.snackBar.open('Mensajes exportados correctamente', 'Cerrar', { duration: 3000 });
+  }
+
+  private exportUsers(): void {
+    const csvContent = this.convertToCSV(this.users, ['username', 'email', 'registration_date', 'status']);
+    this.downloadCSV(csvContent, 'usuarios_registrados.csv');
+    this.snackBar.open('Usuarios exportados correctamente', 'Cerrar', { duration: 3000 });
+  }
+
+  private exportSubscribers(): void {
+    const csvContent = this.convertToCSV(this.subscribers, ['email', 'subscription_date']);
+    this.downloadCSV(csvContent, 'suscriptores.csv');
+    this.snackBar.open('Suscriptores exportados correctamente', 'Cerrar', { duration: 3000 });
+  }
+
+  private convertToCSV(data: any[], columns: string[]): string {
+    const header = columns.join(',');
+    const rows = data.map(item =>
+      columns.map(column => `"${item[column]?.toString().replace(/"/g, '""') || ''}"`).join(',')
+    );
+    return [header, ...rows].join('\n');
+  }
+
+  private downloadCSV(csvContent: string, filename: string): void {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }

@@ -100,6 +100,37 @@ export class ApiService {
     return this.http.get(API_URL + '/motorcycles/', { params });
   }
 
+  getContactMessages(): Observable<any> {
+    return this.http.get(API_URL + '/contact-messages/');
+  }
+
+  getContactMessage(id: number): Observable<any> {
+    return this.http.get(API_URL + '/contact-messages/' + id + '/');
+  }
+
+  createContactMessage(message: any): Observable<any> {
+    return this.http.post(API_URL + '/contact-messages/', message);
+  }
+
+  updateContactMessage(id: number, message: any): Observable<any> {
+    return this.http.put(API_URL + '/contact-messages/' + id + '/', message);
+  }
+
+  deleteContactMessage(id: number): Observable<any> {
+    return this.http.delete(API_URL + '/contact-messages/' + id + '/');
+  }
+
+  // User endpoints
+  getUsers(): Observable<any> {
+    return this.http.get(API_URL + '/users/');
+  }
+
+  // Subscriber endpoints
+  getSubscribers(): Observable<any> {
+    return this.http.get(API_URL + '/subscribers/');
+  }
+
+
   // Subscription endpoint
   subscribeToNewsletter(email: string): Observable<any> {
     return this.http.post(API_URL + '/subscribers/', { email });

@@ -98,4 +98,26 @@ export class ApiService {
   updateSettings(settings: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/settings/`, settings, { headers: this.getHeaders() });
   }
+
+  // Contact Messages
+  getContactMessages(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/contact-messages/`, { headers: this.getHeaders() });
+  }
+
+  updateContactMessage(id: number, data: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/contact-messages/${id}/`, data, { headers: this.getHeaders() });
+  }
+
+  deleteContactMessage(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/contact-messages/${id}/`, { headers: this.getHeaders() });
+  }
+
+  // Subscribers
+  getSubscribers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/subscribers/`, { headers: this.getHeaders() });
+  }
+
+  deleteSubscriber(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/subscribers/${id}/`, { headers: this.getHeaders() });
+  }
 }

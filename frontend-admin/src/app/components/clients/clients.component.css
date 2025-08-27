@@ -213,6 +213,7 @@
   background: rgba(40, 40, 40, 0.9) !important;
   color: #ddd !important;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 8px 8px;
 }
 
 ::ng-deep .mat-paginator-page-size-label,
@@ -248,5 +249,39 @@
 
   .message-preview {
     max-width: 150px;
+  }
+
+  .displayed-messages-columns,
+  .displayed-users-columns,
+  .displayed-subscribers-columns {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-content {
+    padding: 10px;
+  }
+
+  .clients-table {
+    min-height: 150px;
+  }
+
+  .no-data {
+    height: 150px;
+  }
+
+  .no-data mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .no-data h3 {
+    font-size: 1rem;
+  }
+
+  .no-data p {
+    font-size: 0.8rem;
   }
 }
