@@ -71,6 +71,52 @@
   </div>
 </div>
 
+<!-- Sección de Suscripción -->
+<div class="subscription-section fade-in">
+  <div class="subscription-container">
+    <div class="subscription-content">
+      <h2>Mantente Informado</h2>
+      <p>Suscríbete a nuestro newsletter para recibir las últimas novedades, ofertas exclusivas y nuevos vehículos.</p>
+
+      <form [formGroup]="subscriptionForm" (ngSubmit)="onSubmit()" class="subscription-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tu correo electrónico</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="ejemplo@correo.com">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="subscriptionForm.get('email')?.hasError('required')">
+            El correo electrónico es requerido
+          </mat-error>
+          <mat-error *ngIf="subscriptionForm.get('email')?.hasError('email')">
+            Por favor ingresa un correo electrónico válido
+          </mat-error>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="subscribe-btn"
+          [disabled]="!subscriptionForm.valid || isSubmitting">
+          <span *ngIf="!isSubmitting">Suscribirse</span>
+          <span *ngIf="isSubmitting">Suscribiendo...</span>
+          <mat-icon *ngIf="!isSubmitting">send</mat-icon>
+          <mat-icon *ngIf="isSubmitting" class="spinner">
+            <span class="spinner-inner">autorenew</span>
+          </mat-icon>
+        </button>
+      </form>
+
+      <div class="confetti-container" *ngIf="subscriptionSuccess"></div>
+
+      <div class="subscription-success" *ngIf="subscriptionSuccess">
+        <mat-icon>check_circle</mat-icon>
+        <h3>¡Gracias por suscribirte!</h3>
+        <p>Te hemos enviado un correo de confirmación.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal de autenticación requerida -->
 <div *ngIf="showAuthModal" class="auth-modal-overlay">
   <div class="auth-modal">

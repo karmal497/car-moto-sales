@@ -99,4 +99,9 @@ export class ApiService {
 
     return this.http.get(API_URL + '/motorcycles/', { params });
   }
+
+  // Subscription endpoint
+  subscribeToNewsletter(email: string): Observable<any> {
+    return this.http.post(API_URL + '/subscribers/', { email });
+  }
 }

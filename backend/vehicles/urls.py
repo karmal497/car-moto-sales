@@ -14,4 +14,13 @@ urlpatterns = [
     path('motorcycles/<int:pk>/', views.MotorcycleDetailView.as_view(), name='motorcycle-detail'),
     
     path('search/', views.SearchView.as_view(), name='search'),
+    
+    path('contact-messages/', views.ContactMessageListCreateView.as_view(), name='contact-message-list'),
+    path('contact-messages/<int:pk>/', views.ContactMessageDetailView.as_view(), name='contact-message-detail'),
+    
+    path('subscribers/', views.SubscriberListCreateView.as_view(), name='subscriber-list'),
+    path('subscribers/<int:pk>/', views.SubscriberDetailView.as_view(), name='subscriber-detail'),
+    path('subscribers/export/', views.export_subscribers, name='subscriber-export'),
+    
+    path('users/', views.UserListView.as_view(), name='user-list'),
 ]

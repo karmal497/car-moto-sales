@@ -54,3 +54,22 @@ class Motorcycle(models.Model):
     
     def __str__(self):
         return f"{self.brand} {self.model} ({self.year})"
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    message = models.TextField()
+    date = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"Mensaje de {self.name} - {self.date.strftime('%Y-%m-%d')}"
+
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    subscription_date = models.DateTimeField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.email

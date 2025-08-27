@@ -1,11 +1,42 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 from django.db.models import Q
-from .models import Car, Motorcycle
-from .serializers import CarSerializer, MotorcycleSerializer, UserSerializer
+from .models import Car, Motorcycle, ContactMessage, Subscriber
+from .serializers import (
+    CarSerializer, 
+    MotorcycleSerializer, 
+    UserSerializer, 
+    ContactMessageSerializer,
+    SubscriberSerializer
+)
 from rest_framework_simplejwt.tokens import RefreshToken
+import csv
+from django.http import HttpResponse
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def export_subscribers(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="suscriptores.csv"'
+    
+    subscribers = Subscriber.objects.all().order_by('-subscription_date')
+    
+    writer = csv.writer(response)
+    writer.writerow(['Email', 'Fecha de Suscripción', 'Estado'])
+    
+    for subscriber in subscribers:
+        writer.writerow([
+            subscriber.email,
+            subscriber.subscription_date.strftime('%Y-%m-%d %H:%M'),
+            'Activo' if subscriber.is_active else 'Inactivo'
+        ])
+    
+    return response
 
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -76,12 +107,42 @@ class SearchView(generics.ListAPIView):
             )
         
         if vehicle_type == 'all':
-            # We need to return a unified queryset, but since we have two models,
-            # we'll handle this in the serializer or frontend
-            return cars  # This is a simplification
+            return cars
         elif vehicle_type == 'cars':
             return cars
         elif vehicle_type == 'motorcycles':
             return motorcycles
         
         return Car.objects.none()
+
+class ContactMessageListCreateView(generics.ListCreateAPIView):
+    queryset = ContactMessage.objects.all().order_by('-date')
+    serializer_class = ContactMessageSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+class ContactMessageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ContactMessage.objects.all()
+    serializer_class = ContactMessageSerializer
+
+class SubscriberListCreateView(generics.ListCreateAPIView):
+    queryset = Subscriber.objects.all().order_by('-subscription_date')
+    serializer_class = SubscriberSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+class SubscriberDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Subscriber.objects.all()
+    serializer_class = SubscriberSerializer
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all().order_by('-date_joined')
+    serializer_class = UserSerializer
