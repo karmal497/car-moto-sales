@@ -120,4 +120,46 @@ export class ApiService {
   deleteSubscriber(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/subscribers/${id}/`, { headers: this.getHeaders() });
   }
+
+  // Featured Items
+  getFeaturedItems(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/featured/`, { headers: this.getHeaders() });
+  }
+
+  createFeaturedItem(item: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/featured/`, item, { headers: this.getHeaders() });
+  }
+
+  deleteFeaturedItem(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/featured/${id}/`, { headers: this.getHeaders() });
+  }
+
+  getAvailableCars(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/available-cars/`, { headers: this.getHeaders() });
+  }
+
+  getAvailableMotorcycles(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/available-motorcycles/`, { headers: this.getHeaders() });
+  }
+
+  // Discounts
+  getDiscounts(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/discounts/`, { headers: this.getHeaders() });
+  }
+
+  createDiscount(discount: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/discounts/`, discount, { headers: this.getHeaders() });
+  }
+
+  deleteDiscount(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/discounts/${id}/`, { headers: this.getHeaders() });
+  }
+
+  getAvailableCarsForDiscount(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/available-cars-discount/`, { headers: this.getHeaders() });
+  }
+
+  getAvailableMotorcyclesForDiscount(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/available-motorcycles-discount/`, { headers: this.getHeaders() });
+  }
 }

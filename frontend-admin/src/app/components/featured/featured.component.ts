@@ -41,48 +41,67 @@ export class FeaturedComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadFeaturedItems();
   }
 
-  loadData(): void {
+  loadFeaturedItems(): void {
     this.isLoading = true;
-    // Cargar datos de ejemplo
-    setTimeout(() => {
-      this.featuredItems = [
-        {
-          id: 1,
-          title: 'Audi A4 2022',
-          type: 'Auto',
-          image_url: 'assets/images/audi-a4.jpg',
-          price: 45000
-        },
-        {
-          id: 2,
-          title: 'Honda CB500',
-          type: 'Moto',
-          image_url: 'assets/images/honda-cb500.jpg',
-          price: 7500
-        }
-      ];
+    this.apiService.getFeaturedItems().subscribe({
+      next: (response: any) => {
+        // Mapear los datos del backend a la estructura esperada por el frontend
+        this.featuredItems = response.map((item: any) => ({
+          id: item.id,
+          title: item.title,
+          type: item.type,
+          image_url: item.image_url,
+          price: item.price
+        }));
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading featured items:', error);
+        this.snackBar.open('Error al cargar los destacados', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
+      }
+    });
+  }
 
-      // Simular carga de vehículos
-      this.cars = [
-        { id: 1, title: 'Audi A4 2022', price: 45000, image_url: 'assets/images/audi-a4.jpg' },
-        { id: 2, title: 'BMW X5 2023', price: 65000, image_url: 'assets/images/bmw-x5.jpg' },
-        { id: 3, title: 'Mercedes C-Class', price: 48000, image_url: 'assets/images/mercedes-c.jpg' }
-      ];
+  loadAvailableVehicles(): void {
+    this.apiService.getAvailableCars().subscribe({
+      next: (response: any) => {
+        // Mapear los datos de autos
+        this.cars = response.map((car: any) => ({
+          id: car.id,
+          title: car.title,
+          price: car.price,
+          image_url: car.image_url
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading available cars:', error);
+        this.snackBar.open('Error al cargar los autos disponibles', 'Cerrar', { duration: 3000 });
+      }
+    });
 
-      this.motorcycles = [
-        { id: 1, title: 'Honda CB500', price: 7500, image_url: 'assets/images/honda-cb500.jpg' },
-        { id: 2, title: 'Yamaha MT-07', price: 8200, image_url: 'assets/images/yamaha-mt07.jpg' },
-        { id: 3, title: 'Kawasaki Ninja 400', price: 6800, image_url: 'assets/images/kawasaki-ninja400.jpg' }
-      ];
-
-      this.isLoading = false;
-    }, 1000);
+    this.apiService.getAvailableMotorcycles().subscribe({
+      next: (response: any) => {
+        // Mapear los datos de motos
+        this.motorcycles = response.map((motorcycle: any) => ({
+          id: motorcycle.id,
+          title: motorcycle.title,
+          price: motorcycle.price,
+          image_url: motorcycle.image_url
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading available motorcycles:', error);
+        this.snackBar.open('Error al cargar las motos disponibles', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 
   openSelectionPanel(): void {
+    this.loadAvailableVehicles();
     this.showSelectionPanel = true;
   }
 
@@ -91,27 +110,49 @@ export class FeaturedComponent implements OnInit {
   }
 
   addCarToFeatured(car: any): void {
-    if (!this.featuredItems.some(item => item.id === car.id && item.type === 'Auto')) {
-      this.featuredItems.push({
-        ...car,
-        type: 'Auto'
-      });
-      this.snackBar.open('Auto agregado a destacados', 'Cerrar', { duration: 3000 });
-    } else {
-      this.snackBar.open('Este auto ya está en destacados', 'Cerrar', { duration: 3000 });
-    }
+    const featuredItem = {
+      car: car.id,
+      vehicle_type: 'car'
+    };
+
+    this.apiService.createFeaturedItem(featuredItem).subscribe({
+      next: (response: any) => {
+        this.snackBar.open('Auto agregado a destacados', 'Cerrar', { duration: 3000 });
+        this.loadFeaturedItems();
+        this.closeSelectionPanel();
+      },
+      error: (error) => {
+        console.error('Error adding car to featured:', error);
+        if (error.status === 400) {
+          this.snackBar.open('Este auto ya está en destacados', 'Cerrar', { duration: 3000 });
+        } else {
+          this.snackBar.open('Error al agregar el auto a destacados', 'Cerrar', { duration: 3000 });
+        }
+      }
+    });
   }
 
   addMotorcycleToFeatured(motorcycle: any): void {
-    if (!this.featuredItems.some(item => item.id === motorcycle.id && item.type === 'Moto')) {
-      this.featuredItems.push({
-        ...motorcycle,
-        type: 'Moto'
-      });
-      this.snackBar.open('Moto agregada a destacados', 'Cerrar', { duration: 3000 });
-    } else {
-      this.snackBar.open('Esta moto ya está en destacados', 'Cerrar', { duration: 3000 });
-    }
+    const featuredItem = {
+      motorcycle: motorcycle.id,
+      vehicle_type: 'motorcycle'
+    };
+
+    this.apiService.createFeaturedItem(featuredItem).subscribe({
+      next: (response: any) => {
+        this.snackBar.open('Moto agregada a destacados', 'Cerrar', { duration: 3000 });
+        this.loadFeaturedItems();
+        this.closeSelectionPanel();
+      },
+      error: (error) => {
+        console.error('Error adding motorcycle to featured:', error);
+        if (error.status === 400) {
+          this.snackBar.open('Esta moto ya está en destacados', 'Cerrar', { duration: 3000 });
+        } else {
+          this.snackBar.open('Error al agregar la moto a destacados', 'Cerrar', { duration: 3000 });
+        }
+      }
+    });
   }
 
   removeFeaturedItem(item: any): void {
@@ -125,8 +166,16 @@ export class FeaturedComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.featuredItems = this.featuredItems.filter(i => i.id !== item.id || i.type !== item.type);
-        this.snackBar.open('Elemento eliminado de destacados', 'Cerrar', { duration: 3000 });
+        this.apiService.deleteFeaturedItem(item.id).subscribe({
+          next: () => {
+            this.snackBar.open('Elemento eliminado de destacados', 'Cerrar', { duration: 3000 });
+            this.loadFeaturedItems();
+          },
+          error: (error) => {
+            console.error('Error removing featured item:', error);
+            this.snackBar.open('Error al eliminar el elemento de destacados', 'Cerrar', { duration: 3000 });
+          }
+        });
       }
     });
   }

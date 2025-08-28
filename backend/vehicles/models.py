@@ -55,6 +55,52 @@ class Motorcycle(models.Model):
     def __str__(self):
         return f"{self.brand} {self.model} ({self.year})"
 
+class FeaturedItem(models.Model):
+    VEHICLE_TYPE_CHOICES = [
+        ('car', 'Auto'),
+        ('motorcycle', 'Moto'),
+    ]
+    
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, null=True, blank=True)
+    motorcycle = models.ForeignKey(Motorcycle, on_delete=models.CASCADE, null=True, blank=True)
+    vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICES)
+    created_at = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ['car', 'motorcycle']
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        if self.vehicle_type == 'car' and self.car:
+            return f"Destacado: {self.car.title}"
+        elif self.vehicle_type == 'motorcycle' and self.motorcycle:
+            return f"Destacado: {self.motorcycle.title}"
+        return "Destacado sin vehículo"
+
+class Discount(models.Model):
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, null=True, blank=True)
+    motorcycle = models.ForeignKey(Motorcycle, on_delete=models.CASCADE, null=True, blank=True)
+    vehicle_type = models.CharField(max_length=10, choices=FeaturedItem.VEHICLE_TYPE_CHOICES)
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    created_at = models.DateTimeField(default=timezone.now)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        vehicle_name = ""
+        if self.vehicle_type == 'car' and self.car:
+            vehicle_name = self.car.title
+        elif self.vehicle_type == 'motorcycle' and self.motorcycle:
+            vehicle_name = self.motorcycle.title
+        
+        return f"Descuento {self.discount_percentage}% - {vehicle_name}"
+
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()

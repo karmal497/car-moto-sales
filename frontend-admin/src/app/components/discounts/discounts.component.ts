@@ -60,56 +60,71 @@ export class DiscountsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadDiscounts();
   }
 
-  loadData(): void {
+  loadDiscounts(): void {
     this.isLoading = true;
-    // Cargar datos de ejemplo (en una app real, estos vendrían de la API)
-    setTimeout(() => {
-      this.discounts = [
-        {
-          id: 1,
-          title: 'Audi A4 2022',
-          type: 'Auto',
-          image_url: 'assets/images/audi-a4.jpg',
-          original_price: 45000,
-          discount_percentage: 15,
-          new_price: 38250,
-          start_date: '2023-11-01',
-          end_date: '2023-11-15'
-        },
-        {
-          id: 2,
-          title: 'Honda CB500',
-          type: 'Moto',
-          image_url: 'assets/images/honda-cb500.jpg',
-          original_price: 7500,
-          discount_percentage: 10,
-          new_price: 6750,
-          start_date: '2023-11-05',
-          end_date: '2023-11-20'
-        }
-      ];
+    this.apiService.getDiscounts().subscribe({
+      next: (response: any) => {
+        // Mapear los datos del backend a la estructura esperada por el frontend
+        this.discounts = response.map((discount: any) => ({
+          id: discount.id,
+          title: discount.title,
+          type: discount.type,
+          image_url: discount.image_url,
+          original_price: discount.original_price,
+          discount_percentage: discount.discount_percentage,
+          new_price: discount.new_price,
+          start_date: discount.start_date,
+          end_date: discount.end_date
+        }));
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading discounts:', error);
+        this.snackBar.open('Error al cargar los descuentos', 'Cerrar', { duration: 3000 });
+        this.isLoading = false;
+      }
+    });
+  }
 
-      // Simular carga de vehículos
-      this.cars = [
-        { id: 1, title: 'Audi A4 2022', price: 45000, image_url: 'assets/images/audi-a4.jpg' },
-        { id: 2, title: 'BMW X5 2023', price: 65000, image_url: 'assets/images/bmw-x5.jpg' },
-        { id: 3, title: 'Mercedes C-Class', price: 48000, image_url: 'assets/images/mercedes-c.jpg' }
-      ];
+  loadAvailableVehicles(): void {
+    this.apiService.getAvailableCarsForDiscount().subscribe({
+      next: (response: any) => {
+        // Mapear los datos de autos
+        this.cars = response.map((car: any) => ({
+          id: car.id,
+          title: car.title,
+          price: car.price,
+          image_url: car.image_url
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading available cars for discount:', error);
+        this.snackBar.open('Error al cargar los autos disponibles', 'Cerrar', { duration: 3000 });
+      }
+    });
 
-      this.motorcycles = [
-        { id: 1, title: 'Honda CB500', price: 7500, image_url: 'assets/images/honda-cb500.jpg' },
-        { id: 2, title: 'Yamaha MT-07', price: 8200, image_url: 'assets/images/yamaha-mt07.jpg' },
-        { id: 3, title: 'Kawasaki Ninja 400', price: 6800, image_url: 'assets/images/kawasaki-ninja400.jpg' }
-      ];
-
-      this.isLoading = false;
-    }, 1000);
+    this.apiService.getAvailableMotorcyclesForDiscount().subscribe({
+      next: (response: any) => {
+        // Mapear los datos de motos
+        this.motorcycles = response.map((motorcycle: any) => ({
+          id: motorcycle.id,
+          title: motorcycle.title,
+          price: motorcycle.price,
+          image_url: motorcycle.image_url
+        }));
+      },
+      error: (error) => {
+        console.error('Error loading available motorcycles for discount:', error);
+        this.snackBar.open('Error al cargar las motos disponibles', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 
   openSelectionPanel(): void {
+    this.loadAvailableVehicles();
     this.showSelectionPanel = true;
     this.selectedCars = [];
     this.selectedMotorcycles = [];
@@ -158,36 +173,48 @@ export class DiscountsComponent implements OnInit {
       const discountPercentage = formValue.discount_percentage;
 
       // Aplicar descuento a los vehículos seleccionados
+      const discountPromises: any[] = [];
+
       this.selectedCars.forEach(car => {
-        const newPrice = car.price * (1 - discountPercentage / 100);
-        this.discounts.push({
-          ...car,
-          type: 'Auto',
-          original_price: car.price,
+        const discountData = {
+          car: car.id,
+          vehicle_type: 'car',
           discount_percentage: discountPercentage,
-          new_price: newPrice,
           start_date: formValue.start_date,
           end_date: formValue.end_date
-        });
+        };
+
+        discountPromises.push(
+          this.apiService.createDiscount(discountData).toPromise()
+        );
       });
 
       this.selectedMotorcycles.forEach(motorcycle => {
-        const newPrice = motorcycle.price * (1 - discountPercentage / 100);
-        this.discounts.push({
-          ...motorcycle,
-          type: 'Moto',
-          original_price: motorcycle.price,
+        const discountData = {
+          motorcycle: motorcycle.id,
+          vehicle_type: 'motorcycle',
           discount_percentage: discountPercentage,
-          new_price: newPrice,
           start_date: formValue.start_date,
           end_date: formValue.end_date
-        });
+        };
+
+        discountPromises.push(
+          this.apiService.createDiscount(discountData).toPromise()
+        );
       });
 
-      this.showDiscountPanel = false;
-      this.selectedCars = [];
-      this.selectedMotorcycles = [];
-      this.snackBar.open('Descuentos aplicados correctamente', 'Cerrar', { duration: 3000 });
+      Promise.all(discountPromises)
+        .then(() => {
+          this.showDiscountPanel = false;
+          this.selectedCars = [];
+          this.selectedMotorcycles = [];
+          this.snackBar.open('Descuentos aplicados correctamente', 'Cerrar', { duration: 3000 });
+          this.loadDiscounts();
+        })
+        .catch(error => {
+          console.error('Error applying discounts:', error);
+          this.snackBar.open('Error al aplicar los descuentos', 'Cerrar', { duration: 3000 });
+        });
     }
   }
 
@@ -202,14 +229,22 @@ export class DiscountsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.discounts = this.discounts.filter(d => d.id !== discount.id);
-        this.snackBar.open('Descuento eliminado correctamente', 'Cerrar', { duration: 3000 });
+        this.apiService.deleteDiscount(discount.id).subscribe({
+          next: () => {
+            this.snackBar.open('Descuento eliminado correctamente', 'Cerrar', { duration: 3000 });
+            this.loadDiscounts();
+          },
+          error: (error) => {
+            console.error('Error deleting discount:', error);
+            this.snackBar.open('Error al eliminar el descuento', 'Cerrar', { duration: 3000 });
+          }
+        });
       }
     });
   }
 
   isCarSelected(car: any): boolean {
-  return this.selectedCars.some(c => c.id === car.id);
+    return this.selectedCars.some(c => c.id === car.id);
   }
 
   isMotorcycleSelected(motorcycle: any): boolean {

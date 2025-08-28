@@ -23,4 +23,16 @@ urlpatterns = [
     path('subscribers/export/', views.export_subscribers, name='subscriber-export'),
     
     path('users/', views.UserListView.as_view(), name='user-list'),
+    
+    # Featured items endpoints
+    path('featured/', views.FeaturedItemListCreateView.as_view(), name='featured-list'),
+    path('featured/<int:pk>/', views.FeaturedItemDetailView.as_view(), name='featured-detail'),
+    path('available-cars/', views.AvailableCarsListView.as_view(), name='available-cars'),
+    path('available-motorcycles/', views.AvailableMotorcyclesListView.as_view(), name='available-motorcycles'),
+    
+    # Discount endpoints
+    path('discounts/', views.DiscountListCreateView.as_view(), name='discount-list'),
+    path('discounts/<int:pk>/', views.DiscountDetailView.as_view(), name='discount-detail'),
+    path('available-cars-discount/', views.AvailableCarsForDiscountListView.as_view(), name='available-cars-discount'),
+    path('available-motorcycles-discount/', views.AvailableMotorcyclesForDiscountListView.as_view(), name='available-motorcycles-discount'),
 ]
