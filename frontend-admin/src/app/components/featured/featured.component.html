@@ -36,25 +36,21 @@
             <ng-container matColumnDef="title">
               <mat-header-cell *matHeaderCellDef>Vehículo</mat-header-cell>
               <mat-cell *matCellDef="let item">
-                {{item.title || 'Sin título'}}
+                {{item.title}}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="type">
               <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
               <mat-cell *matCellDef="let item">
-                {{item.type || 'Desconocido'}}
+                {{item.type}}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="price">
               <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
               <mat-cell *matCellDef="let item">
-                @if (item.price) {
-                  ${{item.price | number:'1.0-0'}}
-                } @else {
-                  Sin precio
-                }
+                ${{item.price | number:'1.0-0'}}
               </mat-cell>
             </ng-container>
 

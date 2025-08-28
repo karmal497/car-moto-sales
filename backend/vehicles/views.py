@@ -176,11 +176,6 @@ class FeaturedItemListCreateView(generics.ListCreateAPIView):
     serializer_class = FeaturedItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
-    
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 

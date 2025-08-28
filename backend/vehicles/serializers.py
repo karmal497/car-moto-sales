@@ -41,50 +41,14 @@ class MotorcycleSerializer(serializers.ModelSerializer):
         return None
 
 class FeaturedItemSerializer(serializers.ModelSerializer):
-    car = CarSerializer(read_only=True)
-    motorcycle = MotorcycleSerializer(read_only=True)
-    title = serializers.SerializerMethodField()
-    image_url = serializers.SerializerMethodField()
-    price = serializers.SerializerMethodField()
     type = serializers.SerializerMethodField()
     
     class Meta:
         model = FeaturedItem
         fields = ['id', 'car', 'motorcycle', 'vehicle_type', 'created_at', 'title', 'image_url', 'price', 'type']
     
-    def get_title(self, obj):
-        if obj.vehicle_type == 'car' and obj.car:
-            return f"{obj.car.brand} {obj.car.model} ({obj.car.year})"
-        elif obj.vehicle_type == 'motorcycle' and obj.motorcycle:
-            return f"{obj.motorcycle.brand} {obj.motorcycle.model} ({obj.motorcycle.year})"
-        return 'Sin título'
-    
-    def get_image_url(self, obj):
-        if obj.vehicle_type == 'car' and obj.car and obj.car.image:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.car.image.url)
-            return obj.car.image.url
-        elif obj.vehicle_type == 'motorcycle' and obj.motorcycle and obj.motorcycle.image:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.motorcycle.image.url)
-            return obj.motorcycle.image.url
-        return None
-    
-    def get_price(self, obj):
-        if obj.vehicle_type == 'car' and obj.car:
-            return obj.car.price
-        elif obj.vehicle_type == 'motorcycle' and obj.motorcycle:
-            return obj.motorcycle.price
-        return None
-    
     def get_type(self, obj):
-        if obj.vehicle_type == 'car':
-            return 'Auto'
-        elif obj.vehicle_type == 'motorcycle':
-            return 'Moto'
-        return 'Desconocido'
+        return 'Auto' if obj.vehicle_type == 'car' else 'Moto'
 
 class DiscountSerializer(serializers.ModelSerializer):
     car = CarSerializer(read_only=True)

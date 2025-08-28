@@ -64,6 +64,12 @@ class FeaturedItem(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, null=True, blank=True)
     motorcycle = models.ForeignKey(Motorcycle, on_delete=models.CASCADE, null=True, blank=True)
     vehicle_type = models.CharField(max_length=10, choices=VEHICLE_TYPE_CHOICES)
+    
+    # Campos para almacenar los datos directamente
+    title = models.CharField(max_length=200, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    image_url = models.CharField(max_length=500, blank=True)
+    
     created_at = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     
@@ -71,11 +77,24 @@ class FeaturedItem(models.Model):
         unique_together = ['car', 'motorcycle']
         ordering = ['-created_at']
     
-    def __str__(self):
+    def save(self, *args, **kwargs):
+        # Llenar automáticamente los campos title, price e image_url al guardar
         if self.vehicle_type == 'car' and self.car:
-            return f"Destacado: {self.car.title}"
+            self.title = f"{self.car.brand} {self.car.model} ({self.car.year})"
+            self.price = self.car.price
+            if self.car.image:
+                self.image_url = self.car.image.url
         elif self.vehicle_type == 'motorcycle' and self.motorcycle:
-            return f"Destacado: {self.motorcycle.title}"
+            self.title = f"{self.motorcycle.brand} {self.motorcycle.model} ({self.motorcycle.year})"
+            self.price = self.motorcycle.price
+            if self.motorcycle.image:
+                self.image_url = self.motorcycle.image.url
+        
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        if self.title:
+            return f"Destacado: {self.title}"
         return "Destacado sin vehículo"
 
 class Discount(models.Model):
