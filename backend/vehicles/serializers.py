@@ -54,10 +54,10 @@ class FeaturedItemSerializer(serializers.ModelSerializer):
     
     def get_title(self, obj):
         if obj.vehicle_type == 'car' and obj.car:
-            return obj.car.title
+            return f"{obj.car.brand} {obj.car.model} ({obj.car.year})"
         elif obj.vehicle_type == 'motorcycle' and obj.motorcycle:
-            return obj.motorcycle.title
-        return ''
+            return f"{obj.motorcycle.brand} {obj.motorcycle.model} ({obj.motorcycle.year})"
+        return 'Sin título'
     
     def get_image_url(self, obj):
         if obj.vehicle_type == 'car' and obj.car and obj.car.image:
@@ -80,7 +80,11 @@ class FeaturedItemSerializer(serializers.ModelSerializer):
         return None
     
     def get_type(self, obj):
-        return 'Auto' if obj.vehicle_type == 'car' else 'Moto'
+        if obj.vehicle_type == 'car':
+            return 'Auto'
+        elif obj.vehicle_type == 'motorcycle':
+            return 'Moto'
+        return 'Desconocido'
 
 class DiscountSerializer(serializers.ModelSerializer):
     car = CarSerializer(read_only=True)

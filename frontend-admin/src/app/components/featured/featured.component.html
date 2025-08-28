@@ -25,23 +25,37 @@
             <ng-container matColumnDef="image">
               <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
               <mat-cell *matCellDef="let item">
-                <img [src]="item.image_url" alt="{{item.title}}" class="table-image">
+                @if (item.image_url) {
+                  <img [src]="item.image_url" alt="{{item.title}}" class="table-image">
+                } @else {
+                  <div class="no-image">Sin imagen</div>
+                }
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="title">
               <mat-header-cell *matHeaderCellDef>Vehículo</mat-header-cell>
-              <mat-cell *matCellDef="let item">{{item.title}}</mat-cell>
+              <mat-cell *matCellDef="let item">
+                {{item.title || 'Sin título'}}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="type">
               <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
-              <mat-cell *matCellDef="let item">{{item.type}}</mat-cell>
+              <mat-cell *matCellDef="let item">
+                {{item.type || 'Desconocido'}}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="price">
               <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
-              <mat-cell *matCellDef="let item">${{item.price | number:'1.0-0'}}</mat-cell>
+              <mat-cell *matCellDef="let item">
+                @if (item.price) {
+                  ${{item.price | number:'1.0-0'}}
+                } @else {
+                  Sin precio
+                }
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="actions">
@@ -78,9 +92,13 @@
               <div class="vehicle-list">
                 @for (car of cars; track car.id) {
                   <mat-card class="vehicle-card">
-                    <img [src]="car.image_url" alt="{{car.title}}" class="vehicle-image">
+                    @if (car.image_url) {
+                      <img [src]="car.image_url" alt="{{car.brand}} {{car.model}}" class="vehicle-image">
+                    } @else {
+                      <div class="no-image">Sin imagen</div>
+                    }
                     <mat-card-content>
-                      <h4>{{car.title}}</h4>
+                      <h4>{{car.brand}} {{car.model}} ({{car.year}})</h4>
                       <p>${{car.price | number:'1.0-0'}}</p>
                     </mat-card-content>
                     <mat-card-actions>
@@ -98,9 +116,13 @@
               <div class="vehicle-list">
                 @for (motorcycle of motorcycles; track motorcycle.id) {
                   <mat-card class="vehicle-card">
-                    <img [src]="motorcycle.image_url" alt="{{motorcycle.title}}" class="vehicle-image">
+                    @if (motorcycle.image_url) {
+                      <img [src]="motorcycle.image_url" alt="{{motorcycle.brand}} {{motorcycle.model}}" class="vehicle-image">
+                    } @else {
+                      <div class="no-image">Sin imagen</div>
+                    }
                     <mat-card-content>
-                      <h4>{{motorcycle.title}}</h4>
+                      <h4>{{motorcycle.brand}} {{motorcycle.model}} ({{motorcycle.year}})</h4>
                       <p>${{motorcycle.price | number:'1.0-0'}}</p>
                     </mat-card-content>
                     <mat-card-actions>

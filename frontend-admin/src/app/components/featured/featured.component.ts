@@ -48,14 +48,9 @@ export class FeaturedComponent implements OnInit {
     this.isLoading = true;
     this.apiService.getFeaturedItems().subscribe({
       next: (response: any) => {
-        // Mapear los datos del backend a la estructura esperada por el frontend
-        this.featuredItems = response.map((item: any) => ({
-          id: item.id,
-          title: item.title,
-          type: item.type,
-          image_url: item.image_url,
-          price: item.price
-        }));
+        console.log('Featured items response:', response); // DEBUG
+        // Usar los datos directamente del backend (ya vienen formateados)
+        this.featuredItems = response;
         this.isLoading = false;
       },
       error: (error) => {
@@ -69,13 +64,9 @@ export class FeaturedComponent implements OnInit {
   loadAvailableVehicles(): void {
     this.apiService.getAvailableCars().subscribe({
       next: (response: any) => {
-        // Mapear los datos de autos
-        this.cars = response.map((car: any) => ({
-          id: car.id,
-          title: car.title,
-          price: car.price,
-          image_url: car.image_url
-        }));
+        console.log('Available cars:', response); // DEBUG
+        // Usar los datos directamente del backend
+        this.cars = response;
       },
       error: (error) => {
         console.error('Error loading available cars:', error);
@@ -85,13 +76,9 @@ export class FeaturedComponent implements OnInit {
 
     this.apiService.getAvailableMotorcycles().subscribe({
       next: (response: any) => {
-        // Mapear los datos de motos
-        this.motorcycles = response.map((motorcycle: any) => ({
-          id: motorcycle.id,
-          title: motorcycle.title,
-          price: motorcycle.price,
-          image_url: motorcycle.image_url
-        }));
+        console.log('Available motorcycles:', response); // DEBUG
+        // Usar los datos directamente del backend
+        this.motorcycles = response;
       },
       error: (error) => {
         console.error('Error loading available motorcycles:', error);
@@ -117,6 +104,7 @@ export class FeaturedComponent implements OnInit {
 
     this.apiService.createFeaturedItem(featuredItem).subscribe({
       next: (response: any) => {
+        console.log('Car added to featured:', response); // DEBUG
         this.snackBar.open('Auto agregado a destacados', 'Cerrar', { duration: 3000 });
         this.loadFeaturedItems();
         this.closeSelectionPanel();
@@ -140,6 +128,7 @@ export class FeaturedComponent implements OnInit {
 
     this.apiService.createFeaturedItem(featuredItem).subscribe({
       next: (response: any) => {
+        console.log('Motorcycle added to featured:', response); // DEBUG
         this.snackBar.open('Moto agregada a destacados', 'Cerrar', { duration: 3000 });
         this.loadFeaturedItems();
         this.closeSelectionPanel();
