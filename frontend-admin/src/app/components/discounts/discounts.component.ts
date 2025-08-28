@@ -67,18 +67,8 @@ export class DiscountsComponent implements OnInit {
     this.isLoading = true;
     this.apiService.getDiscounts().subscribe({
       next: (response: any) => {
-        // Mapear los datos del backend a la estructura esperada por el frontend
-        this.discounts = response.map((discount: any) => ({
-          id: discount.id,
-          title: discount.title,
-          type: discount.type,
-          image_url: discount.image_url,
-          original_price: discount.original_price,
-          discount_percentage: discount.discount_percentage,
-          new_price: discount.new_price,
-          start_date: discount.start_date,
-          end_date: discount.end_date
-        }));
+        // Usar los datos directamente del backend (ya vienen formateados)
+        this.discounts = response;
         this.isLoading = false;
       },
       error: (error) => {
@@ -92,13 +82,8 @@ export class DiscountsComponent implements OnInit {
   loadAvailableVehicles(): void {
     this.apiService.getAvailableCarsForDiscount().subscribe({
       next: (response: any) => {
-        // Mapear los datos de autos
-        this.cars = response.map((car: any) => ({
-          id: car.id,
-          title: car.title,
-          price: car.price,
-          image_url: car.image_url
-        }));
+        // Usar los datos directamente del backend
+        this.cars = response;
       },
       error: (error) => {
         console.error('Error loading available cars for discount:', error);
@@ -108,13 +93,8 @@ export class DiscountsComponent implements OnInit {
 
     this.apiService.getAvailableMotorcyclesForDiscount().subscribe({
       next: (response: any) => {
-        // Mapear los datos de motos
-        this.motorcycles = response.map((motorcycle: any) => ({
-          id: motorcycle.id,
-          title: motorcycle.title,
-          price: motorcycle.price,
-          image_url: motorcycle.image_url
-        }));
+        // Usar los datos directamente del backend
+        this.motorcycles = response;
       },
       error: (error) => {
         console.error('Error loading available motorcycles for discount:', error);
@@ -181,7 +161,10 @@ export class DiscountsComponent implements OnInit {
           vehicle_type: 'car',
           discount_percentage: discountPercentage,
           start_date: formValue.start_date,
-          end_date: formValue.end_date
+          end_date: formValue.end_date,
+          title: `${car.brand} ${car.model} (${car.year})`,
+          original_price: car.price,
+          image_url: car.image_url
         };
 
         discountPromises.push(
@@ -195,7 +178,10 @@ export class DiscountsComponent implements OnInit {
           vehicle_type: 'motorcycle',
           discount_percentage: discountPercentage,
           start_date: formValue.start_date,
-          end_date: formValue.end_date
+          end_date: formValue.end_date,
+          title: `${motorcycle.brand} ${motorcycle.model} (${motorcycle.year})`,
+          original_price: motorcycle.price,
+          image_url: motorcycle.image_url
         };
 
         discountPromises.push(

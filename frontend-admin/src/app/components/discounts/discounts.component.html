@@ -98,9 +98,9 @@
                     [class.selected]="isCarSelected(car)"
                     (click)="toggleCarSelection(car)"
                     class="vehicle-card">
-                    <img [src]="car.image_url" alt="{{car.title}}" class="vehicle-image">
+                    <img [src]="car.image_url" alt="{{car.brand}} {{car.model}}" class="vehicle-image">
                     <mat-card-content>
-                      <h4>{{car.title}}</h4>
+                      <h4>{{car.brand}} {{car.model}} ({{car.year}})</h4>
                       <p>${{car.price | number:'1.0-0'}}</p>
                     </mat-card-content>
                   </mat-card>
@@ -116,9 +116,9 @@
                     [class.selected]="isMotorcycleSelected(motorcycle)"
                     (click)="toggleMotorcycleSelection(motorcycle)"
                     class="vehicle-card">
-                    <img [src]="motorcycle.image_url" alt="{{motorcycle.title}}" class="vehicle-image">
+                    <img [src]="motorcycle.image_url" alt="{{motorcycle.brand}} {{motorcycle.model}}" class="vehicle-image">
                     <mat-card-content>
-                      <h4>{{motorcycle.title}}</h4>
+                      <h4>{{motorcycle.brand}} {{motorcycle.model}} ({{motorcycle.year}})</h4>
                       <p>${{motorcycle.price | number:'1.0-0'}}</p>
                     </mat-card-content>
                   </mat-card>

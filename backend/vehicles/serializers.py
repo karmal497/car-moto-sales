@@ -51,13 +51,8 @@ class FeaturedItemSerializer(serializers.ModelSerializer):
         return 'Auto' if obj.vehicle_type == 'car' else 'Moto'
 
 class DiscountSerializer(serializers.ModelSerializer):
-    car = CarSerializer(read_only=True)
-    motorcycle = MotorcycleSerializer(read_only=True)
-    title = serializers.SerializerMethodField()
-    image_url = serializers.SerializerMethodField()
-    original_price = serializers.SerializerMethodField()
-    new_price = serializers.SerializerMethodField()
     type = serializers.SerializerMethodField()
+    new_price = serializers.SerializerMethodField()
     
     class Meta:
         model = Discount
@@ -65,42 +60,14 @@ class DiscountSerializer(serializers.ModelSerializer):
                  'start_date', 'end_date', 'created_at', 'is_active', 'title', 
                  'image_url', 'original_price', 'new_price', 'type']
     
-    def get_title(self, obj):
-        if obj.vehicle_type == 'car' and obj.car:
-            return obj.car.title
-        elif obj.vehicle_type == 'motorcycle' and obj.motorcycle:
-            return obj.motorcycle.title
-        return ''
-    
-    def get_image_url(self, obj):
-        if obj.vehicle_type == 'car' and obj.car and obj.car.image:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.car.image.url)
-            return obj.car.image.url
-        elif obj.vehicle_type == 'motorcycle' and obj.motorcycle and obj.motorcycle.image:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.motorcycle.image.url)
-            return obj.motorcycle.image.url
-        return None
-    
-    def get_original_price(self, obj):
-        if obj.vehicle_type == 'car' and obj.car:
-            return float(obj.car.price)
-        elif obj.vehicle_type == 'motorcycle' and obj.motorcycle:
-            return float(obj.motorcycle.price)
-        return None
-    
-    def get_new_price(self, obj):
-        original_price = self.get_original_price(obj)
-        if original_price:
-            discount_decimal = float(obj.discount_percentage) / 100
-            return original_price * (1 - discount_decimal)
-        return None
-    
     def get_type(self, obj):
         return 'Auto' if obj.vehicle_type == 'car' else 'Moto'
+    
+    def get_new_price(self, obj):
+        if obj.original_price:
+            discount_decimal = float(obj.discount_percentage) / 100
+            return float(obj.original_price) * (1 - discount_decimal)
+        return None
 
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:

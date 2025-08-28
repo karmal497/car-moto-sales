@@ -104,12 +104,33 @@ class Discount(models.Model):
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
+    
+    # Campos para almacenar los datos directamente
+    title = models.CharField(max_length=200, blank=True)
+    original_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    image_url = models.CharField(max_length=500, blank=True)
+    
     created_at = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
     
     class Meta:
         ordering = ['-created_at']
+    
+    def save(self, *args, **kwargs):
+        # Llenar automáticamente los campos title, original_price e image_url al guardar
+        if self.vehicle_type == 'car' and self.car:
+            self.title = f"{self.car.brand} {self.car.model} ({self.car.year})"
+            self.original_price = self.car.price
+            if self.car.image:
+                self.image_url = self.car.image.url
+        elif self.vehicle_type == 'motorcycle' and self.motorcycle:
+            self.title = f"{self.motorcycle.brand} {self.motorcycle.model} ({self.motorcycle.year})"
+            self.original_price = self.motorcycle.price
+            if self.motorcycle.image:
+                self.image_url = self.motorcycle.image.url
+        
+        super().save(*args, **kwargs)
     
     def __str__(self):
         vehicle_name = ""
