@@ -18,6 +18,9 @@ class CarSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
             return obj.image.url
         return None
 
@@ -31,6 +34,9 @@ class MotorcycleSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
             return obj.image.url
         return None
 
@@ -55,8 +61,14 @@ class FeaturedItemSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.vehicle_type == 'car' and obj.car and obj.car.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.car.image.url)
             return obj.car.image.url
         elif obj.vehicle_type == 'motorcycle' and obj.motorcycle and obj.motorcycle.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.motorcycle.image.url)
             return obj.motorcycle.image.url
         return None
     
@@ -94,22 +106,28 @@ class DiscountSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.vehicle_type == 'car' and obj.car and obj.car.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.car.image.url)
             return obj.car.image.url
         elif obj.vehicle_type == 'motorcycle' and obj.motorcycle and obj.motorcycle.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.motorcycle.image.url)
             return obj.motorcycle.image.url
         return None
     
     def get_original_price(self, obj):
         if obj.vehicle_type == 'car' and obj.car:
-            return obj.car.price
+            return float(obj.car.price)
         elif obj.vehicle_type == 'motorcycle' and obj.motorcycle:
-            return obj.motorcycle.price
+            return float(obj.motorcycle.price)
         return None
     
     def get_new_price(self, obj):
         original_price = self.get_original_price(obj)
         if original_price:
-            discount_decimal = obj.discount_percentage / 100
+            discount_decimal = float(obj.discount_percentage) / 100
             return original_price * (1 - discount_decimal)
         return None
     

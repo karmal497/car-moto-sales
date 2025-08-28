@@ -66,17 +66,32 @@ class CarListCreateView(generics.ListCreateAPIView):
     serializer_class = CarSerializer
     parser_classes = [MultiPartParser, FormParser]
     
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
 class CarDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class MotorcycleListCreateView(generics.ListCreateAPIView):
     queryset = Motorcycle.objects.all().order_by('-created_at')
     serializer_class = MotorcycleSerializer
     parser_classes = [MultiPartParser, FormParser]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
@@ -84,6 +99,11 @@ class MotorcycleListCreateView(generics.ListCreateAPIView):
 class MotorcycleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Motorcycle.objects.all()
     serializer_class = MotorcycleSerializer
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class SearchView(generics.ListAPIView):
     serializer_class = CarSerializer
@@ -156,6 +176,11 @@ class FeaturedItemListCreateView(generics.ListCreateAPIView):
     serializer_class = FeaturedItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
@@ -163,10 +188,20 @@ class FeaturedItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = FeaturedItem.objects.all()
     serializer_class = FeaturedItemSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class AvailableCarsListView(generics.ListAPIView):
     serializer_class = CarSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def get_queryset(self):
         # Excluir autos que ya están destacados
@@ -179,6 +214,11 @@ class AvailableCarsListView(generics.ListAPIView):
 class AvailableMotorcyclesListView(generics.ListAPIView):
     serializer_class = MotorcycleSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def get_queryset(self):
         # Excluir motos que ya están destacadas
@@ -194,6 +234,11 @@ class DiscountListCreateView(generics.ListCreateAPIView):
     serializer_class = DiscountSerializer
     permission_classes = [permissions.IsAuthenticated]
     
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
@@ -201,10 +246,20 @@ class DiscountDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class AvailableCarsForDiscountListView(generics.ListAPIView):
     serializer_class = CarSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def get_queryset(self):
         # Excluir autos que ya tienen descuento activo
@@ -218,6 +273,11 @@ class AvailableCarsForDiscountListView(generics.ListAPIView):
 class AvailableMotorcyclesForDiscountListView(generics.ListAPIView):
     serializer_class = MotorcycleSerializer
     permission_classes = [permissions.IsAuthenticated]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def get_queryset(self):
         # Excluir motos que ya tienen descuento activo
