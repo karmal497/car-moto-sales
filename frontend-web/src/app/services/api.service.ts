@@ -136,6 +136,10 @@ export class ApiService {
     return this.http.post(API_URL + '/subscribers/', { email });
   }
 
+  getDiscounts(): Observable<any> {
+    return this.http.get(API_URL + '/discounts/');
+  }
+
 
 }
 

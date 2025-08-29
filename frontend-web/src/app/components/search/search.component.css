@@ -210,33 +210,57 @@
   line-height: 1.6;
 }
 
+/* Nuevo estilo para el botón de Rally */
 .rally-btn {
   border-radius: 50px;
   padding: 14px 35px;
   font-weight: 700;
   font-size: 1.1rem;
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  color: white;
-  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
-  transition: all 0.3s ease;
+  background: white;
+  color: #2c3e50;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+  transition: all 0.5s ease;
   display: flex;
   align-items: center;
   gap: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  border: 2px solid white;
+}
+
+.rally-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.rally-btn:hover::before {
+  width: 100%;
 }
 
 .rally-btn:hover {
-  transform: translateY(-3px);
+  color: white;
   box-shadow: 0 10px 25px rgba(231, 76, 60, 0.6);
-  background: linear-gradient(135deg, #ff5e4d 0%, #d35400 100%);
+}
+
+.rally-btn:hover mat-icon {
+  color: white;
 }
 
 .rally-image {
   flex: 1;
   height: 300px;
   background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-              url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover no-repeat;
+              url('/assets/images/fast.jpg') center/cover no-repeat;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
@@ -354,9 +378,9 @@
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
   color: white;
   z-index: 2;
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
   display: flex;
   align-items: center;
   gap: 5px;
@@ -683,6 +707,8 @@
   padding: 60px 20px;
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
 }
 
 .loading-state mat-spinner {
@@ -693,12 +719,16 @@
   font-size: 1.2rem;
   color: #7f8c8d;
   margin-top: 16px;
+  position: relative;
+  z-index: 2;
 }
 
 .no-results mat-icon, .search-prompt mat-icon {
   font-size: 4rem;
   color: #bdc3c7;
   margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .prompt-icon {
@@ -709,6 +739,131 @@
   font-size: 1.8rem;
   color: #2c3e50;
   margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Efecto de fondo mejorado para la sección de búsqueda */
+.search-prompt {
+  background: transparent;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  padding: 80px 20px;
+  margin: 40px 0;
+}
+
+.search-prompt::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(231, 76, 60, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(52, 152, 219, 0.1) 0%, transparent 50%);
+  animation: pulseBackground 4s infinite alternate;
+  z-index: 1;
+}
+
+.search-prompt::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  animation: shineEffect 3s infinite linear;
+  z-index: 2;
+}
+
+.prompt-content {
+  position: relative;
+  z-index: 3;
+}
+
+.prompt-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+  animation: floatIcons 3s ease-in-out infinite;
+}
+
+.prompt-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  padding: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.5s ease;
+}
+
+.prompt-icon.car-icon {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  animation-delay: 0.5s;
+}
+
+.prompt-icon.motorcycle-icon {
+  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  color: white;
+  animation-delay: 1s;
+}
+
+.prompt-icons:hover .prompt-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+.search-prompt h3 {
+  font-size: 2.2rem;
+  background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 20px;
+  font-weight: 800;
+}
+
+.search-prompt p {
+  font-size: 1.3rem;
+  color: #5d6d7e;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+@keyframes floatIcons {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulseBackground {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes shineEffect {
+  0% {
+    transform: rotate(45deg) translateX(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateX(100%);
+  }
 }
 
 .results-count {
@@ -809,6 +964,19 @@
     flex: 1;
     min-width: 45%;
   }
+
+  .prompt-icons {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .search-prompt h3 {
+    font-size: 1.8rem;
+  }
+
+  .search-prompt p {
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -834,5 +1002,20 @@
 
   .featured-price, .price-amount {
     font-size: 1.5rem;
+  }
+
+  .prompt-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    padding: 12px;
+  }
+
+  .search-prompt h3 {
+    font-size: 1.6rem;
+  }
+
+  .search-prompt p {
+    font-size: 1rem;
   }
 }

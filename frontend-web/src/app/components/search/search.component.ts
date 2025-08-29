@@ -68,8 +68,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchQuery = '';
   searchResults: Vehicle[] = [];
   featuredItems: FeaturedItem[] = [];
-  allCars: Vehicle[] = [];
-  allMotorcycles: Vehicle[] = [];
+  allVehicles: Vehicle[] = [];
   isLoading = false;
   isLoadingFeatured = false;
   isLoadingCars = false;
@@ -90,8 +89,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   loadAllData(): void {
     this.loadFeaturedItems();
-    this.loadAllCars();
-    this.loadAllMotorcycles();
+    this.loadAllVehicles();
   }
 
   loadFeaturedItems(): void {
@@ -104,34 +102,67 @@ export class SearchComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  loadAllCars(): void {
+  loadAllVehicles(): void {
     this.isLoadingCars = true;
+    this.isLoadingMotorcycles = true;
+
+    // Cargar autos
     this.apiService.getCars()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (cars: any) => {
-          this.allCars = cars.map((car: any) => ({ ...car, type: 'car' }));
-          this.isLoadingCars = false;
+          const carVehicles = cars.map((car: any) => ({
+            ...car,
+            type: 'car',
+            image_url: car.image_url || 'assets/images/car-placeholder.jpg'
+          }));
+
+          // Cargar motos
+          this.apiService.getMotorcycles()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (motorcycles: any) => {
+                const motorcycleVehicles = motorcycles.map((motorcycle: any) => ({
+                  ...motorcycle,
+                  type: 'motorcycle',
+                  image_url: motorcycle.image_url || 'assets/images/motorcycle-placeholder.jpg'
+                }));
+
+                this.allVehicles = [...carVehicles, ...motorcycleVehicles];
+                this.isLoadingCars = false;
+                this.isLoadingMotorcycles = false;
+              },
+              error: (error: any) => {
+                console.error('Error loading motorcycles:', error);
+                this.isLoadingMotorcycles = false;
+                this.allVehicles = carVehicles;
+              }
+            });
         },
         error: (error: any) => {
           console.error('Error loading cars:', error);
           this.isLoadingCars = false;
-        }
-      });
-  }
 
-  loadAllMotorcycles(): void {
-    this.isLoadingMotorcycles = true;
-    this.apiService.getMotorcycles()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (motorcycles: any) => {
-          this.allMotorcycles = motorcycles.map((motorcycle: any) => ({ ...motorcycle, type: 'motorcycle' }));
-          this.isLoadingMotorcycles = false;
-        },
-        error: (error: any) => {
-          console.error('Error loading motorcycles:', error);
-          this.isLoadingMotorcycles = false;
+          // Intentar cargar solo motos si falla la carga de autos
+          this.apiService.getMotorcycles()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (motorcycles: any) => {
+                const motorcycleVehicles = motorcycles.map((motorcycle: any) => ({
+                  ...motorcycle,
+                  type: 'motorcycle',
+                  image_url: motorcycle.image_url || 'assets/images/motorcycle-placeholder.jpg'
+                }));
+
+                this.allVehicles = motorcycleVehicles;
+                this.isLoadingMotorcycles = false;
+              },
+              error: (error: any) => {
+                console.error('Error loading motorcycles:', error);
+                this.isLoadingMotorcycles = false;
+                this.allVehicles = [];
+              }
+            });
         }
       });
   }
@@ -150,37 +181,30 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   search(): void {
     if (!this.searchQuery.trim()) {
-      this.searchResults = [];
+      this.searchResults = this.allVehicles;
       return;
     }
 
     this.isLoading = true;
-    this.apiService.search(this.searchQuery, 'all')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (results: any) => {
-          // Combine cars and motorcycles
-          const cars = results.cars || [];
-          const motorcycles = results.motorcycles || [];
 
-          // Add type property to distinguish between vehicles
-          this.searchResults = [
-            ...cars.map((car: any) => ({ ...car, type: 'car' })),
-            ...motorcycles.map((motorcycle: any) => ({ ...motorcycle, type: 'motorcycle' }))
-          ];
+    // Búsqueda local en los vehículos ya cargados
+    const query = this.searchQuery.toLowerCase().trim();
+    this.searchResults = this.allVehicles.filter(vehicle =>
+      vehicle.brand.toLowerCase().includes(query) ||
+      vehicle.model.toLowerCase().includes(query) ||
+      vehicle.year.toString().includes(query) ||
+      vehicle.color.toLowerCase().includes(query) ||
+      vehicle.fuel_type.toLowerCase().includes(query) ||
+      (vehicle.type === 'car' && vehicle.transmission?.toLowerCase().includes(query)) ||
+      (vehicle.type === 'motorcycle' && vehicle.category?.toLowerCase().includes(query))
+    );
 
-          this.isLoading = false;
-        },
-        error: (error: any) => {
-          console.error('Error searching:', error);
-          this.isLoading = false;
-        }
-      });
+    this.isLoading = false;
   }
 
   clearSearch(): void {
     this.searchQuery = '';
-    this.searchResults = [];
+    this.searchResults = this.allVehicles;
   }
 
   viewVehicleDetails(vehicle: Vehicle): void {
@@ -197,6 +221,15 @@ export class SearchComponent implements OnInit, OnDestroy {
     } else if (item.vehicle_type === 'motorcycle' && item.motorcycle) {
       this.router.navigate(['/motorcycle', item.motorcycle.id]);
     }
+  }
+
+  inquiry(vehicle: Vehicle): void {
+    // Lógica para manejar consultas sobre vehículos
+    console.log('Consultar sobre vehículo:', vehicle);
+    // Aquí podrías implementar:
+    // - Abrir un modal de contacto
+    // - Navegar a una página de contacto
+    // - Iniciar un proceso de chat
   }
 
   getTransmissionLabel(value: string): string {
