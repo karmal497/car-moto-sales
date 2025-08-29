@@ -70,6 +70,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  navigateToDiscounts(): void {
+    this.router.navigate(['/discounts']);
+  }
+
   navigateToCars(): void {
     this.router.navigate(['/cars']);
   }

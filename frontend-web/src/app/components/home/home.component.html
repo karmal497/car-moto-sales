@@ -2,15 +2,25 @@
   <div class="hero-content">
     <h1 class="hero-title">Encuentra tu Auto o Moto Ideal</h1>
     <p class="hero-subtitle">Explora nuestra amplia selección de vehículos de alta calidad</p>
-    <button
-      mat-raised-button
-      color="accent"
-      (click)="checkAuthAndNavigate('/search')"
-      [class.locked]="!isLoggedIn"
-      class="explore-btn">
-      <mat-icon *ngIf="!isLoggedIn" class="lock-icon">lock</mat-icon>
-      Explorar Vehículos
-    </button>
+    <div class="hero-buttons">
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="checkAuthAndNavigate('/search')"
+        [class.locked]="!isLoggedIn"
+        class="explore-btn">
+        <mat-icon *ngIf="!isLoggedIn" class="lock-icon">lock</mat-icon>
+        Explorar Vehículos
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="navigateToDiscounts()"
+        class="discounts-btn">
+        <mat-icon>local_offer</mat-icon>
+        Novedades
+      </button>
+    </div>
   </div>
 </div>
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router'; // Añadir Router import
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 // Angular Material
@@ -58,7 +58,7 @@ interface Motorcycle {
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
+    RouterModule, // Añadir RouterModule a los imports
     ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
@@ -83,7 +83,8 @@ export class HomeComponent implements OnInit {
     private apiService: ApiService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router // Inyectar Router correctamente
   ) {
     this.subscriptionForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
@@ -119,7 +120,7 @@ export class HomeComponent implements OnInit {
   checkAuthAndNavigate(route: string): void {
     if (this.authService.isLoggedIn()) {
       // Navegar normalmente si está autenticado
-      window.location.href = route;
+      this.router.navigate([route]); // Usar router.navigate en lugar de window.location
     } else {
       // Efecto de vibración
       this.shakeElement();
@@ -150,6 +151,11 @@ export class HomeComponent implements OnInit {
   // Format number without using pipe
   formatNumber(value: number): string {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  // Navegar a la vista de descuentos
+  navigateToDiscounts(): void {
+    this.router.navigate(['/discounts']);
   }
 
   // Suscribirse al newsletter

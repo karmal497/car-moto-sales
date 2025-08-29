@@ -7,7 +7,8 @@ import { CarListComponent } from './components/cars/car-list/car-list.component'
 import { MotorcycleListComponent } from './components/motorcycles/motorcycle-list/motorcycle-list.component';
 import { VehicleDetailComponent } from './components/vehicle-detail/vehicle-detail.component';
 import { SearchComponent } from './components/search/search.component';
-import { ContactComponent } from './components/contact/contact.component'; // Añadir esta importación
+import { ContactComponent } from './components/contact/contact.component';
+import { DiscountListComponent } from './components/discounts/discount-list/discount-list.component'; // Añadir esta importación
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'car/:id', component: VehicleDetailComponent },
   { path: 'motorcycle/:id', component: VehicleDetailComponent },
   { path: 'search', component: SearchComponent },
-  { path: 'contact', component: ContactComponent }, // Añadir esta ruta
+  { path: 'contact', component: ContactComponent },
+  { path: 'discounts', component: DiscountListComponent }, // Añadir esta ruta
   { path: '**', redirectTo: '' }
 ];
