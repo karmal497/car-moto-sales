@@ -31,26 +31,75 @@
     </div>
   </div>
 
-
-<!-- Sección de Anuncio de Descuentos -->
-  <div class="discount-promo-section">
-    <div class="discount-promo-content">
-      <div class="discount-promo-text">
-        <h2>¡Ofertas Especiales!</h2>
-        <p>Descubre nuestros vehículos con descuentos exclusivos. Precios especiales por tiempo limitado.</p>
-        <button mat-raised-button color="warn" (click)="navigateToDiscounts()">
+  <!-- Sección de Anuncio de Descuentos con estilo Rally -->
+  <div class="rally-discount-section">
+    <div class="rally-content">
+      <div class="rally-text">
+        <div class="rally-badge">OFERTA ESPECIAL</div>
+        <h2>¡Descuentos de Rally!</h2>
+        <p>Experimenta la emoción de las carreras con nuestros vehículos en oferta. Velocidad, potencia y descuentos que aceleran tu corazón.</p>
+        <button mat-raised-button color="warn" class="rally-btn" (click)="navigateToDiscounts()">
           <mat-icon>local_offer</mat-icon>
-          Ver Ofertas
+          Ver Ofertas de Rally
         </button>
       </div>
-      <div class="discount-promo-image">
-        <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Ofertas especiales">
+      <div class="rally-image">
+        <div class="rally-overlay">
+          <div class="speed-line"></div>
+          <div class="speed-line"></div>
+          <div class="speed-line"></div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Sección de Vehículos Destacados -->
+  <div class="featured-section" *ngIf="featuredItems.length > 0">
+    <div class="section-header">
+      <h2>Vehículos Destacados</h2>
+      <p>Nuestras selecciones premium</p>
+    </div>
 
-  <!-- Barra de búsqueda (reubicada) -->
+    <div *ngIf="isLoadingFeatured" class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando destacados...</p>
+    </div>
+
+    <div class="featured-grid">
+      <div
+        *ngFor="let item of featuredItems"
+        class="featured-card"
+        (click)="viewFeaturedItemDetails(item)">
+
+        <div class="featured-badge">
+          <mat-icon>star</mat-icon>
+          Destacado
+        </div>
+
+        <div class="featured-image-container">
+          <img
+            [src]="item.image_url || (item.vehicle_type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg')"
+            [alt]="item.title"
+            class="featured-image">
+
+          <div class="featured-overlay">
+            <button mat-icon-button class="view-details-btn">
+              <mat-icon>visibility</mat-icon>
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+
+        <div class="featured-content">
+          <h3>{{ item.title }}</h3>
+          <div class="featured-price">${{ formatNumber(item.price) }}</div>
+          <div class="featured-type">{{ item.vehicle_type === 'car' ? 'Auto' : 'Moto' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de búsqueda -->
   <div class="search-section">
     <div class="search-box-container">
       <div class="search-box">
@@ -70,7 +119,7 @@
 
   <!-- Results Count -->
   <div class="results-count">
-    <p *ngIf="!isLoading">
+    <p *ngIf="!isLoading && searchQuery">
       {{ searchResults.length }} vehículos encontrados
     </p>
   </div>
@@ -155,6 +204,154 @@
           <mat-icon>{{ vehicle.type === 'car' ? 'car_rental' : 'two_wheeler' }}</mat-icon>
           Solicitar Prueba
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Todos los Autos -->
+  <div class="all-vehicles-section" *ngIf="!searchQuery">
+    <div class="section-header">
+      <h2>Nuestra Flota de Autos</h2>
+      <p>Descubre todos nuestros vehículos disponibles</p>
+    </div>
+
+    <div *ngIf="isLoadingCars" class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando autos...</p>
+    </div>
+
+    <div *ngIf="!isLoadingCars && allCars.length > 0" class="vehicles-grid">
+      <div
+        *ngFor="let vehicle of allCars"
+        class="vehicle-card"
+        (click)="viewVehicleDetails(vehicle)">
+
+        <div class="vehicle-image-container">
+          <img
+            [src]="vehicle.image_url || 'assets/images/car-placeholder.jpg'"
+            [alt]="vehicle.title"
+            class="vehicle-image"
+            (error)="vehicle.image_url = 'assets/images/car-placeholder.jpg'">
+
+          <div class="vehicle-badge" [class.sold]="vehicle.is_sold">
+            {{ vehicle.is_sold ? 'Vendido' : 'Disponible' }}
+          </div>
+
+          <div class="vehicle-type-badge car">
+            Auto
+          </div>
+
+          <div class="vehicle-overlay">
+            <button mat-icon-button class="view-details-btn">
+              <mat-icon>visibility</mat-icon>
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+
+        <div class="vehicle-content">
+          <h3 class="vehicle-title">{{ vehicle.brand }} {{ vehicle.model }}</h3>
+          <p class="vehicle-year">{{ vehicle.year }} • {{ vehicle.transmission ? getTransmissionLabel(vehicle.transmission) : 'N/A' }}</p>
+
+          <div class="vehicle-specs">
+            <div class="spec-item">
+              <mat-icon>speed</mat-icon>
+              <span>{{ formatNumber(vehicle.mileage) }} km</span>
+            </div>
+            <div class="spec-item">
+              <mat-icon>local_gas_station</mat-icon>
+              <span>{{ vehicle.fuel_type }}</span>
+            </div>
+            <div class="spec-item">
+              <mat-icon>color_lens</mat-icon>
+              <span>{{ vehicle.color }}</span>
+            </div>
+          </div>
+
+          <div class="vehicle-price">
+            <span class="price-amount">${{ formatNumber(vehicle.price) }}</span>
+            <span class="price-label">Precio especial</span>
+          </div>
+
+          <button mat-button class="inquiry-btn">
+            <mat-icon>car_rental</mat-icon>
+            Solicitar Prueba
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Todas las Motos -->
+  <div class="all-vehicles-section" *ngIf="!searchQuery">
+    <div class="section-header">
+      <h2>Nuestra Colección de Motos</h2>
+      <p>Explora nuestras motocicletas disponibles</p>
+    </div>
+
+    <div *ngIf="isLoadingMotorcycles" class="loading-state">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando motos...</p>
+    </div>
+
+    <div *ngIf="!isLoadingMotorcycles && allMotorcycles.length > 0" class="vehicles-grid">
+      <div
+        *ngFor="let vehicle of allMotorcycles"
+        class="vehicle-card"
+        (click)="viewVehicleDetails(vehicle)">
+
+        <div class="vehicle-image-container">
+          <img
+            [src]="vehicle.image_url || 'assets/images/motorcycle-placeholder.jpg'"
+            [alt]="vehicle.title"
+            class="vehicle-image"
+            (error)="vehicle.image_url = 'assets/images/motorcycle-placeholder.jpg'">
+
+          <div class="vehicle-badge" [class.sold]="vehicle.is_sold">
+            {{ vehicle.is_sold ? 'Vendido' : 'Disponible' }}
+          </div>
+
+          <div class="vehicle-type-badge motorcycle">
+            Moto
+          </div>
+
+          <div class="vehicle-overlay">
+            <button mat-icon-button class="view-details-btn">
+              <mat-icon>visibility</mat-icon>
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+
+        <div class="vehicle-content">
+          <h3 class="vehicle-title">{{ vehicle.brand }} {{ vehicle.model }}</h3>
+          <p class="vehicle-year">{{ vehicle.year }} • {{ vehicle.category ? getCategoryLabel(vehicle.category) : 'N/A' }}</p>
+
+          <div class="vehicle-specs">
+            <div class="spec-item">
+              <mat-icon>speed</mat-icon>
+              <span>{{ formatNumber(vehicle.mileage) }} km</span>
+            </div>
+            <div class="spec-item">
+              <mat-icon>local_gas_station</mat-icon>
+              <span>{{ vehicle.fuel_type }}</span>
+            </div>
+            <div class="spec-item">
+              <mat-icon>color_lens</mat-icon>
+              <span>{{ vehicle.color }}</span>
+            </div>
+          </div>
+
+          <div class="vehicle-price">
+            <span class="price-amount">${{ formatNumber(vehicle.price) }}</span>
+            <span class="price-label">Precio especial</span>
+          </div>
+
+          <button mat-button class="inquiry-btn">
+            <mat-icon>two_wheeler</mat-icon>
+            Solicitar Prueba
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -36,6 +36,16 @@ interface Vehicle {
   fuel_type: string;
 }
 
+interface FeaturedItem {
+  id: number;
+  title: string;
+  price: number;
+  image_url: string;
+  vehicle_type: string;
+  car?: Vehicle;
+  motorcycle?: Vehicle;
+}
+
 @Component({
   selector: 'app-search',
   standalone: true,
@@ -57,17 +67,73 @@ interface Vehicle {
 export class SearchComponent implements OnInit, OnDestroy {
   searchQuery = '';
   searchResults: Vehicle[] = [];
+  featuredItems: FeaturedItem[] = [];
+  allCars: Vehicle[] = [];
+  allMotorcycles: Vehicle[] = [];
   isLoading = false;
+  isLoadingFeatured = false;
+  isLoadingCars = false;
+  isLoadingMotorcycles = false;
 
   private destroy$ = new Subject<void>();
 
   constructor(private apiService: ApiService, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadAllData();
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  loadAllData(): void {
+    this.loadFeaturedItems();
+    this.loadAllCars();
+    this.loadAllMotorcycles();
+  }
+
+  loadFeaturedItems(): void {
+    this.isLoadingFeatured = true;
+    // Simular la carga de elementos destacados ya que el endpoint no existe
+    // En una implementación real, esto vendría de la API
+    setTimeout(() => {
+      this.featuredItems = [];
+      this.isLoadingFeatured = false;
+    }, 1000);
+  }
+
+  loadAllCars(): void {
+    this.isLoadingCars = true;
+    this.apiService.getCars()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (cars: any) => {
+          this.allCars = cars.map((car: any) => ({ ...car, type: 'car' }));
+          this.isLoadingCars = false;
+        },
+        error: (error: any) => {
+          console.error('Error loading cars:', error);
+          this.isLoadingCars = false;
+        }
+      });
+  }
+
+  loadAllMotorcycles(): void {
+    this.isLoadingMotorcycles = true;
+    this.apiService.getMotorcycles()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (motorcycles: any) => {
+          this.allMotorcycles = motorcycles.map((motorcycle: any) => ({ ...motorcycle, type: 'motorcycle' }));
+          this.isLoadingMotorcycles = false;
+        },
+        error: (error: any) => {
+          console.error('Error loading motorcycles:', error);
+          this.isLoadingMotorcycles = false;
+        }
+      });
   }
 
   navigateToDiscounts(): void {
@@ -105,7 +171,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
           this.isLoading = false;
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error searching:', error);
           this.isLoading = false;
         }
@@ -122,6 +188,14 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.router.navigate(['/car', vehicle.id]);
     } else {
       this.router.navigate(['/motorcycle', vehicle.id]);
+    }
+  }
+
+  viewFeaturedItemDetails(item: FeaturedItem): void {
+    if (item.vehicle_type === 'car' && item.car) {
+      this.router.navigate(['/car', item.car.id]);
+    } else if (item.vehicle_type === 'motorcycle' && item.motorcycle) {
+      this.router.navigate(['/motorcycle', item.motorcycle.id]);
     }
   }
 

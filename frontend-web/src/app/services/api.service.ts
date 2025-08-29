@@ -135,4 +135,8 @@ export class ApiService {
   subscribeToNewsletter(email: string): Observable<any> {
     return this.http.post(API_URL + '/subscribers/', { email });
   }
+
+
 }
+
+
