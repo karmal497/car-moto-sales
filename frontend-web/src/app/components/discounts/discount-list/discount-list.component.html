@@ -32,33 +32,54 @@
   <div *ngIf="!isLoading && discountVehicles.length > 0" class="discount-vehicles-grid">
     <div
       *ngFor="let vehicle of discountVehicles"
-      class="discount-vehicle-card"
-      (click)="viewVehicleDetails(vehicle)">
+      class="discount-vehicle-card">
 
+      <!-- Discount Badge -->
       <div class="discount-badge">
         <span>-{{ vehicle.discount_percentage }}%</span>
+      </div>
+
+      <!-- Time Remaining Badge -->
+      <div *ngIf="vehicle.days_remaining >= 0" class="time-remaining-badge" [class.expiring-soon]="isExpiringSoon(vehicle.days_remaining)">
+        <mat-icon>access_time</mat-icon>
+        <span>{{ getTimeRemainingText(vehicle.days_remaining) }}</span>
       </div>
 
       <div class="vehicle-image-container">
         <img
           [src]="vehicle.image_url || (vehicle.type === 'car' ? 'assets/images/car-placeholder.jpg' : 'assets/images/motorcycle-placeholder.jpg')"
           [alt]="vehicle.title"
-          class="vehicle-image">
+          class="vehicle-image"
+          onerror="this.src='assets/images/vehicle-placeholder.jpg'">
       </div>
 
       <div class="vehicle-content">
-        <h3 class="vehicle-title">{{ vehicle.brand }} {{ vehicle.model }}</h3>
-        <p class="vehicle-year">{{ vehicle.year }}</p>
+        <!-- Vehicle Title -->
+        <h3 class="vehicle-title">{{ vehicle.title }}</h3>
 
-        <div class="price-container">
-          <div class="original-price">${{ formatNumber(vehicle.original_price) }}</div>
-          <div class="new-price">${{ formatNumber(vehicle.new_price) }}</div>
-          <div class="savings">Ahorras ${{ formatNumber(calculateSavings(vehicle.original_price, vehicle.new_price)) }}</div>
+        <!-- Vehicle Details -->
+        <div class="vehicle-details">
+          <span class="vehicle-type">
+            <mat-icon>{{ vehicle.type === 'car' ? 'directions_car' : 'two_wheeler' }}</mat-icon>
+            {{ vehicle.type === 'car' ? 'Auto' : 'Moto' }}
+          </span>
+          <span class="vehicle-year">{{ vehicle.year }}</span>
         </div>
 
-        <button mat-button class="view-details-btn">
-          <mat-icon>{{ vehicle.type === 'car' ? 'car_rental' : 'two_wheeler' }}</mat-icon>
-          Ver Oferta
+        <!-- Price Container -->
+        <div class="price-container">
+          <div class="original-price">Precio original: ${{ formatNumber(vehicle.original_price) }}</div>
+          <div class="new-price">Precio con descuento: ${{ formatNumber(vehicle.new_price) }}</div>
+          <div class="savings">
+            ¡Ahorras ${{ formatNumber(calculateSavings(vehicle.original_price, vehicle.new_price)) }}!
+            ({{ vehicle.discount_percentage }}% de descuento)
+          </div>
+        </div>
+
+        <!-- Action Button -->
+        <button mat-button class="consult-btn" (click)="openWhatsApp(vehicle)">
+          <mat-icon>whatsapp</mat-icon>
+          Consultar
         </button>
       </div>
     </div>

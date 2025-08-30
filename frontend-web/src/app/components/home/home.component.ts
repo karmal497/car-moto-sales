@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router'; // Añadir Router import
+import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 // Angular Material
@@ -15,42 +15,15 @@ import { MatInputModule } from '@angular/material/input';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 
-interface Car {
+interface FeaturedItem {
   id: number;
+  car: any;
+  motorcycle: any;
+  vehicle_type: string;
   title: string;
-  description: string;
   price: number;
-  brand: string;
-  model: string;
-  year: number;
-  color: string;
-  engine: string;
-  transmission: string;
-  mileage: number;
-  fuel_type: string;
   image_url: string;
-  created_at: string;
-  is_sold: boolean;
-  created_by: number;
-}
-
-interface Motorcycle {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  brand: string;
-  model: string;
-  year: number;
-  color: string;
-  engine: string;
-  category: string;
-  mileage: number;
-  fuel_type: string;
-  image_url: string;
-  created_at: string;
-  is_sold: boolean;
-  created_by: number;
+  type: string;
 }
 
 @Component({
@@ -58,7 +31,7 @@ interface Motorcycle {
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule, // Añadir RouterModule a los imports
+    RouterModule,
     ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
@@ -71,20 +44,25 @@ interface Motorcycle {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  featuredCars: Car[] = [];
-  featuredMotorcycles: Motorcycle[] = [];
+  featuredItems: FeaturedItem[] = [];
+  featuredCars: any[] = [];
+  featuredMotorcycles: any[] = [];
   isLoggedIn = false;
   showAuthModal = false;
   subscriptionForm: FormGroup;
   isSubmitting = false;
   subscriptionSuccess = false;
+  isLoading = true;
+
+  // Número de WhatsApp del proveedor
+  readonly whatsappNumber = '55415814';
 
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
-    private router: Router // Inyectar Router correctamente
+    private router: Router
   ) {
     this.subscriptionForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
@@ -97,9 +75,73 @@ export class HomeComponent implements OnInit {
   }
 
   loadFeaturedVehicles(): void {
+    this.isLoading = true;
+
+    // Obtener items destacados desde el backend
+    this.apiService.getFeaturedItems().subscribe({
+      next: (data: any) => {
+        this.featuredItems = data;
+        this.featuredCars = [];
+        this.featuredMotorcycles = [];
+
+        // Separar autos y motos destacados usando los datos directos del featured item
+        data.forEach((item: FeaturedItem) => {
+          const vehicleData = {
+            id: item.car ? item.car.id : item.motorcycle?.id,
+            brand: this.extractBrandFromTitle(item.title),
+            model: this.extractModelFromTitle(item.title),
+            year: this.extractYearFromTitle(item.title),
+            title: item.title,
+            price: item.price,
+            image_url: item.image_url,
+            transmission: item.car ? item.car.transmission : '',
+            category: item.motorcycle ? item.motorcycle.category : '',
+            vehicle_type: item.vehicle_type
+          };
+
+          if (item.vehicle_type === 'car') {
+            this.featuredCars.push(vehicleData);
+          } else if (item.vehicle_type === 'motorcycle') {
+            this.featuredMotorcycles.push(vehicleData);
+          }
+        });
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading featured vehicles:', error);
+        this.isLoading = false;
+
+        // Fallback: cargar algunos vehículos normales si hay error
+        this.loadRegularVehicles();
+      }
+    });
+  }
+
+  // Métodos auxiliares para extraer información del título
+  private extractBrandFromTitle(title: string): string {
+    const parts = title.split(' ');
+    return parts[0] || '';
+  }
+
+  private extractModelFromTitle(title: string): string {
+    const parts = title.split(' ');
+    return parts.slice(1, -2).join(' ') || '';
+  }
+
+  private extractYearFromTitle(title: string): number {
+    const match = title.match(/\((\d{4})\)/);
+    return match ? parseInt(match[1], 10) : new Date().getFullYear();
+  }
+
+  // Método de fallback en caso de error
+  private loadRegularVehicles(): void {
     this.apiService.getCars().subscribe({
       next: (data: any) => {
-        this.featuredCars = data.slice(0, 3);
+        this.featuredCars = data.slice(0, 3).map((car: any) => ({
+          ...car,
+          vehicle_type: 'car'
+        }));
       },
       error: (error) => {
         console.error('Error loading cars:', error);
@@ -108,7 +150,10 @@ export class HomeComponent implements OnInit {
 
     this.apiService.getMotorcycles().subscribe({
       next: (data: any) => {
-        this.featuredMotorcycles = data.slice(0, 3);
+        this.featuredMotorcycles = data.slice(0, 3).map((motorcycle: any) => ({
+          ...motorcycle,
+          vehicle_type: 'motorcycle'
+        }));
       },
       error: (error) => {
         console.error('Error loading motorcycles:', error);
@@ -116,11 +161,19 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  // Método para abrir WhatsApp
+  openWhatsApp(vehicle: any): void {
+    const message = `Hola, estoy interesado en el vehículo: ${vehicle.brand} ${vehicle.model} (${vehicle.year}). ¿Podrían darme más información?`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/${this.whatsappNumber}?text=${encodedMessage}`;
+
+    window.open(whatsappUrl, '_blank');
+  }
+
   // Método para verificar autenticación antes de navegar
   checkAuthAndNavigate(route: string): void {
     if (this.authService.isLoggedIn()) {
-      // Navegar normalmente si está autenticado
-      this.router.navigate([route]); // Usar router.navigate en lugar de window.location
+      this.router.navigate([route]);
     } else {
       // Efecto de vibración
       this.shakeElement();
@@ -150,7 +203,7 @@ export class HomeComponent implements OnInit {
 
   // Format number without using pipe
   formatNumber(value: number): string {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0';
   }
 
   // Navegar a la vista de descuentos

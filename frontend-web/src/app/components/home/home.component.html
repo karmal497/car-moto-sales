@@ -24,41 +24,67 @@
   </div>
 </div>
 
-<div class="featured-section fade-in">
-  <h2>Autos Destacados</h2>
-  <div class="vehicle-grid">
-    <mat-card *ngFor="let car of featuredCars" class="vehicle-card">
-      <img mat-card-image [src]="car.image_url || 'assets/images/car-placeholder.jpg'" alt="{{car.title}}" class="vehicle-image">
-      <mat-card-content>
-        <h3>{{car.brand}} {{car.model}}</h3>
-        <p>Año: {{car.year}}</p>
-        <p>Transmisión: {{car.transmission}}</p>
-        <p class="price">${{formatNumber(car.price)}}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary" (click)="checkAuthAndNavigate('/car/' + car.id)">Ver Detalles</button>
-      </mat-card-actions>
-    </mat-card>
+@if (isLoading) {
+  <div class="loading-spinner-featured">
+    <mat-spinner diameter="40"></mat-spinner>
   </div>
-</div>
+} @else {
+  <div class="featured-section fade-in">
+    <h2>Autos Destacados</h2>
+    @if (featuredCars.length > 0) {
+      <div class="vehicle-grid">
+        <mat-card *ngFor="let car of featuredCars" class="vehicle-card">
+          <img mat-card-image [src]="car.image_url || 'assets/images/car-placeholder.jpg'" alt="{{car.title}}" class="vehicle-image">
+          <mat-card-content>
+            <h3>{{car.brand}} {{car.model}}</h3>
+            <p>Año: {{car.year}}</p>
+            <p>Transmisión: {{car.transmission || 'No especificada'}}</p>
+            <p class="price">${{formatNumber(car.price)}}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="openWhatsApp(car)" class="whatsapp-button">
+              <mat-icon>whatsapp</mat-icon>
+              Consultar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    } @else {
+      <div class="no-featured">
+        <mat-icon>directions_car</mat-icon>
+        <p>No hay autos destacados disponibles</p>
+      </div>
+    }
+  </div>
 
-<div class="featured-section fade-in">
-  <h2>Motos Destacadas</h2>
-  <div class="vehicle-grid">
-    <mat-card *ngFor="let motorcycle of featuredMotorcycles" class="vehicle-card">
-      <img mat-card-image [src]="motorcycle.image_url || 'assets/images/motorcycle-placeholder.jpg'" alt="{{motorcycle.title}}" class="vehicle-image">
-      <mat-card-content>
-        <h3>{{motorcycle.brand}} {{motorcycle.model}}</h3>
-        <p>Año: {{motorcycle.year}}</p>
-        <p>Categoría: {{motorcycle.category}}</p>
-        <p class="price">${{formatNumber(motorcycle.price)}}</p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary" (click)="checkAuthAndNavigate('/motorcycle/' + motorcycle.id)">Ver Detalles</button>
-      </mat-card-actions>
-    </mat-card>
+  <div class="featured-section fade-in">
+    <h2>Motos Destacadas</h2>
+    @if (featuredMotorcycles.length > 0) {
+      <div class="vehicle-grid">
+        <mat-card *ngFor="let motorcycle of featuredMotorcycles" class="vehicle-card">
+          <img mat-card-image [src]="motorcycle.image_url || 'assets/images/motorcycle-placeholder.jpg'" alt="{{motorcycle.title}}" class="vehicle-image">
+          <mat-card-content>
+            <h3>{{motorcycle.brand}} {{motorcycle.model}}</h3>
+            <p>Año: {{motorcycle.year}}</p>
+            <p>Categoría: {{motorcycle.category || 'No especificada'}}</p>
+            <p class="price">${{formatNumber(motorcycle.price)}}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="openWhatsApp(motorcycle)" class="whatsapp-button">
+              <mat-icon>whatsapp</mat-icon>
+              Consultar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    } @else {
+      <div class="no-featured">
+        <mat-icon>two_wheeler</mat-icon>
+        <p>No hay motos destacadas disponibles</p>
+      </div>
+    }
   </div>
-</div>
+}
 
 <div class="features-section fade-in">
   <h2>¿Por qué elegirnos?</h2>

@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     totalMotorcycles: 0,
     soldCars: 0,
     soldMotorcycles: 0,
-    totalClients: 0
+    totalSubscribers: 0
   };
 
   recentCars: any[] = [];
@@ -75,16 +75,24 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.stats.totalMotorcycles = motorcycles.length;
         this.stats.soldMotorcycles = motorcycles.filter((moto: any) => moto.is_sold).length;
         this.createChart();
-        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading motorcycles:', error);
-        this.isLoading = false;
       }
     });
 
-    // Simular datos de clientes
-    this.stats.totalClients = 42;
+    // Obtener total de suscriptores desde el backend
+    this.apiService.getSubscribers().subscribe({
+      next: (subscribers) => {
+        this.stats.totalSubscribers = subscribers.length;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading subscribers:', error);
+        this.stats.totalSubscribers = 0;
+        this.isLoading = false;
+      }
+    });
   }
 
   loadRecentVehicles(): void {

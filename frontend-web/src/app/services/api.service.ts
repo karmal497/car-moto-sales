@@ -140,6 +140,9 @@ export class ApiService {
     return this.http.get(API_URL + '/discounts/');
   }
 
+  getFeaturedItems(): Observable<any> {
+    return this.http.get(API_URL + '/featured/');
+  }
 
 }
 

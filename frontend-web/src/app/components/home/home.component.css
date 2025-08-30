@@ -718,3 +718,73 @@
     max-width: 300px;
   }
 }
+
+/* Loading spinner for featured vehicles */
+.loading-spinner-featured {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.loading-spinner-featured mat-spinner {
+  margin: 0 auto;
+}
+
+/* WhatsApp button styles */
+.whatsapp-button {
+  background: #25D366 !important;
+  color: white !important;
+}
+
+.whatsapp-button:hover {
+  background: #128C7E !important;
+  transform: translateY(-2px);
+}
+
+/* Loading spinner for featured vehicles */
+.loading-spinner-featured {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  padding: 40px 0;
+}
+
+.loading-spinner-featured mat-spinner {
+  margin: 0 auto;
+}
+
+/* WhatsApp button styles */
+.whatsapp-button {
+  background: #25D366 !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.whatsapp-button:hover {
+  background: #128C7E !important;
+  transform: translateY(-2px);
+}
+
+/* No featured items message */
+.no-featured {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+}
+
+.no-featured mat-icon {
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 20px;
+  color: #bdc3c7;
+}
+
+.no-featured p {
+  font-size: 1.2rem;
+  margin: 0;
+}
