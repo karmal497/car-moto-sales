@@ -42,6 +42,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
 
 class FeaturedItemSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = FeaturedItem
@@ -49,10 +50,20 @@ class FeaturedItemSerializer(serializers.ModelSerializer):
     
     def get_type(self, obj):
         return 'Auto' if obj.vehicle_type == 'car' else 'Moto'
+    
+    def get_image_url(self, obj):
+        if obj.image_url:
+            request = self.context.get('request')
+            if request:
+                # Construir URL absoluta usando el path relativo almacenado
+                return request.build_absolute_uri('/media/' + obj.image_url)
+            return '/media/' + obj.image_url
+        return None
 
 class DiscountSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
     new_price = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
     
     class Meta:
         model = Discount
@@ -67,6 +78,15 @@ class DiscountSerializer(serializers.ModelSerializer):
         if obj.original_price:
             discount_decimal = float(obj.discount_percentage) / 100
             return float(obj.original_price) * (1 - discount_decimal)
+        return None
+    
+    def get_image_url(self, obj):
+        if obj.image_url:
+            request = self.context.get('request')
+            if request:
+                # Construir URL absoluta usando el path relativo almacenado
+                return request.build_absolute_uri('/media/' + obj.image_url)
+            return '/media/' + obj.image_url
         return None
 
 class ContactMessageSerializer(serializers.ModelSerializer):

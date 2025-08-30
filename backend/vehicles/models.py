@@ -83,12 +83,14 @@ class FeaturedItem(models.Model):
             self.title = f"{self.car.brand} {self.car.model} ({self.car.year})"
             self.price = self.car.price
             if self.car.image:
-                self.image_url = self.car.image.url
+                # Solo guardamos el path relativo, la URL completa se genera en el serializer
+                self.image_url = self.car.image.name
         elif self.vehicle_type == 'motorcycle' and self.motorcycle:
             self.title = f"{self.motorcycle.brand} {self.motorcycle.model} ({self.motorcycle.year})"
             self.price = self.motorcycle.price
             if self.motorcycle.image:
-                self.image_url = self.motorcycle.image.url
+                # Solo guardamos el path relativo, la URL completa se genera en el serializer
+                self.image_url = self.motorcycle.image.name
         
         super().save(*args, **kwargs)
     
@@ -123,12 +125,14 @@ class Discount(models.Model):
             self.title = f"{self.car.brand} {self.car.model} ({self.car.year})"
             self.original_price = self.car.price
             if self.car.image:
-                self.image_url = self.car.image.url
+                # Solo guardamos el path relativo, la URL completa se genera en el serializer
+                self.image_url = self.car.image.name
         elif self.vehicle_type == 'motorcycle' and self.motorcycle:
             self.title = f"{self.motorcycle.brand} {self.motorcycle.model} ({self.motorcycle.year})"
             self.original_price = self.motorcycle.price
             if self.motorcycle.image:
-                self.image_url = self.motorcycle.image.url
+                # Solo guardamos el path relativo, la URL completa se genera en el serializer
+                self.image_url = self.motorcycle.image.name
         
         super().save(*args, **kwargs)
     
