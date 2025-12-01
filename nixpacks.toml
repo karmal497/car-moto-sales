@@ -1,13 +1,11 @@
 [phases.setup]
 cmds = [
-    "cd backend",
-    "pip install -r requirements.txt"
+    "cd backend && pip install -r requirements.txt"
 ]
 
 [phases.build]
 cmds = [
-    "cd backend", 
-    "python manage.py collectstatic --noinput"
+    "cd backend && python3 manage.py collectstatic --noinput"
 ]
 
 [start]
