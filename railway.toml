@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"
+startCommand = "cd backend && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"
 
 [build.environment]
-PYTHON_VERSION = "3.11.5"
+PYTHON_VERSION = "3.11"
