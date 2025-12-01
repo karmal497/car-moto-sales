@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "cd backend && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"
+startCommand = "chmod +x railway-setup.sh && ./railway-setup.sh"
 
 [build.environment]
 PYTHON_VERSION = "3.11"
