@@ -79,6 +79,15 @@ DATABASES = {
     }
 }
 
+# OVERRIDE with Railway PostgreSQL if DATABASE_URL exists
+print("DATABASE_URL exists?", 'DATABASE_URL' in os.environ)
+if 'DATABASE_URL' in os.environ:
+    print("DATABASE_URL:", os.environ['DATABASE_URL'])
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=True
+    )
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
