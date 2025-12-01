@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "cd backend && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"
+
+[build.environment]
+PYTHON_VERSION = "3.11"

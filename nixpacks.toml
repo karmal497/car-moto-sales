@@ -1,0 +1,14 @@
+[phases.setup]
+cmds = [
+    "cd backend",
+    "pip install -r requirements.txt"
+]
+
+[phases.build]
+cmds = [
+    "cd backend", 
+    "python manage.py collectstatic --noinput"
+]
+
+[start]
+cmd = "cd backend && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"
