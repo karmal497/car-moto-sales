@@ -20,8 +20,8 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1',
-    '.railway.app',
-    '.up.railway.app'
+    '.onrender.com',
+    'webvehicles.netlify.app',
     ]
 
 INSTALLED_APPS = [
@@ -68,25 +68,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'car_moto_sales',
-        'USER': 'car_moto_user',
-        'PASSWORD': 'securepassword123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-
-# OVERRIDE with Railway PostgreSQL if DATABASE_URL exists
-print("DATABASE_URL exists?", 'DATABASE_URL' in os.environ)
 if 'DATABASE_URL' in os.environ:
-    print("DATABASE_URL:", os.environ['DATABASE_URL'])
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=600,
-        ssl_require=True
-    )
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DATABASE_NAME', 'car_moto_sales'),
+            'USER': os.environ.get('DATABASE_USER', 'car_moto_user'),
+            'PASSWORD': os.environ.get('DATABASE_PASSWORD', 'securepassword123'),
+            'HOST': os.environ.get('DATABASE_HOST', 'localhost'),
+            'PORT': os.environ.get('DATABASE_PORT', '5432'),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
