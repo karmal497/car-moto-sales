@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ImageUrlPipe } from '../../pipes/image-url.pipe';
+import { ImageUrlPipe } from '../../pipes/image-url.pipe'; // NUEVO
 
 @Component({
   selector: 'app-dashboard',
@@ -22,7 +22,7 @@ import { ImageUrlPipe } from '../../pipes/image-url.pipe';
     RouterModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    ImageUrlPipe
+    ImageUrlPipe // NUEVO
   ]
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -83,7 +83,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
-    // Obtener total de suscriptores desde el backend
     this.apiService.getSubscribers().subscribe({
       next: (subscribers) => {
         this.stats.totalSubscribers = subscribers.length;
@@ -165,5 +164,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
     }
+  }
+
+  // Método para manejar errores de imagen
+  onImageError(event: any): void {
+    console.error('❌ Image failed to load:', event.target.src);
+    event.target.src = 'assets/images/no-image.jpg';
+    event.target.alt = 'Imagen no disponible';
   }
 }

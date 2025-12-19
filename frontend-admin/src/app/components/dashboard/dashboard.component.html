@@ -86,7 +86,10 @@
         <ng-container matColumnDef="image">
           <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
           <mat-cell *matCellDef="let car">
-            <img [src]="car.image_url | imageUrl" alt="{{car.title}}" class="table-image">
+            <img [src]="car.image_url | imageUrl"
+                 alt="{{car.title}}"
+                 class="table-image"
+                 (error)="onImageError($event)">
           </mat-cell>
         </ng-container>
 
@@ -126,7 +129,10 @@
         <ng-container matColumnDef="image">
           <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
           <mat-cell *matCellDef="let motorcycle">
-            <img [src]="motorcycle.image_url | imageUrl" alt="{{motorcycle.title}}" class="table-image">
+            <img [src]="motorcycle.image_url | imageUrl"
+                 alt="{{motorcycle.title}}"
+                 class="table-image"
+                 (error)="onImageError($event)">
           </mat-cell>
         </ng-container>
 

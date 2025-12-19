@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ImageUrlPipe } from '../../pipes/image-url.pipe';
+import { ImageUrlPipe } from '../../pipes/image-url.pipe'; // NUEVO
 
 @Component({
   selector: 'app-featured',
@@ -24,7 +24,7 @@ import { ImageUrlPipe } from '../../pipes/image-url.pipe';
     MatProgressSpinnerModule,
     MatTableModule,
     MatTooltipModule,
-    ImageUrlPipe
+    ImageUrlPipe // NUEVO
   ]
 })
 export class FeaturedComponent implements OnInit {
@@ -50,6 +50,7 @@ export class FeaturedComponent implements OnInit {
     this.isLoading = true;
     this.apiService.getFeaturedItems().subscribe({
       next: (response: any) => {
+        console.log('⭐ FEATURED ITEMS DATA:', response);
         this.featuredItems = response;
         this.isLoading = false;
       },
@@ -167,5 +168,12 @@ export class FeaturedComponent implements OnInit {
         });
       }
     });
+  }
+
+  // Método para manejar errores de imagen
+  onImageError(event: any): void {
+    console.error('❌ Image failed to load:', event.target.src);
+    event.target.src = 'assets/images/no-image.jpg';
+    event.target.alt = 'Imagen no disponible';
   }
 }

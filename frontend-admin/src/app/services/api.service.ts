@@ -32,35 +32,47 @@ export class ApiService {
     });
   }
 
-  // Método para construir URLs de imágenes completas
+  // Método para construir URLs de imágenes completas - VERSIÓN CORREGIDA
   getImageUrl(imagePath: string): string {
-    if (!imagePath) return '';
+    console.log('🖼️ API SERVICE - getImageUrl called with:', imagePath);
 
-    // Si ya es una URL completa, devolverla tal cual
+    if (!imagePath || imagePath === 'null' || imagePath === 'undefined') {
+      console.log('🖼️ No image path, returning default');
+      return 'assets/images/no-image.jpg';
+    }
+
+    // CASO 1: Ya es URL completa (http://, https://)
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      console.log('🖼️ Already full URL:', imagePath);
       return imagePath;
     }
 
-    // **CORRECCIÓN IMPORTANTE: Manejar rutas de medios de Django**
-    // En Django, las imágenes normalmente vienen como: /media/cars/imagen.jpg
-    // O como: media/cars/imagen.jpg
-    // Necesitamos construir la URL completa:
-    if (imagePath.startsWith('/media/') || imagePath.startsWith('media/')) {
-      // Si ya tiene /media, usar la URL base directamente
-      if (imagePath.startsWith('/')) {
-        return `${this.baseUrl}${imagePath}`;
+    // CASO 2: Es Base64 (data:image/...)
+    if (imagePath.startsWith('data:image')) {
+      console.log('🖼️ Base64 image');
+      return imagePath;
+    }
+
+    // CASO 3: Ruta relativa de Django (lo más común)
+    console.log('🖼️ Relative path detected:', imagePath);
+
+    // Tu backend Django guarda las imágenes en /media/
+    // Cuando no hay request en el serializer, devuelve: 'cars/foto.jpg' o 'motorcycles/foto.jpg'
+
+    // Asegurar que empiece con '/media/'
+    let finalPath = imagePath;
+
+    if (!finalPath.startsWith('/media/')) {
+      if (finalPath.startsWith('media/')) {
+        finalPath = '/' + finalPath;
       } else {
-        return `${this.baseUrl}/${imagePath}`;
+        finalPath = '/media/' + finalPath;
       }
     }
 
-    // Si es una ruta relativa, construir la URL completa
-    if (imagePath.startsWith('/')) {
-      return `${this.baseUrl}${imagePath}`;
-    }
-
-    // Para rutas relativas sin slash inicial
-    return `${this.baseUrl}/${imagePath}`;
+    const fullUrl = `${this.baseUrl}${finalPath}`;
+    console.log('🖼️ Built full URL:', fullUrl);
+    return fullUrl;
   }
 
   // Cars

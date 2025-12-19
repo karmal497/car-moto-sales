@@ -9,7 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ImageUrlPipe } from '../../pipes/image-url.pipe';
+import { ImageUrlPipe } from '../../pipes/image-url.pipe'; // NUEVO
 
 @Component({
   selector: 'app-cars',
@@ -22,7 +22,7 @@ import { ImageUrlPipe } from '../../pipes/image-url.pipe';
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    ImageUrlPipe
+    ImageUrlPipe // NUEVO
   ]
 })
 export class CarsComponent implements OnInit {
@@ -43,6 +43,10 @@ export class CarsComponent implements OnInit {
   loadCars(): void {
     this.apiService.getCars().subscribe({
       next: (cars) => {
+        console.log('🚗 CARS DATA FROM API:', cars);
+        if (cars && cars.length > 0) {
+          console.log('🔍 First car image_url:', cars[0].image_url);
+        }
         this.cars = cars;
         this.isLoading = false;
       },
@@ -74,5 +78,12 @@ export class CarsComponent implements OnInit {
         });
       }
     });
+  }
+
+  // Método para manejar errores de imagen
+  onImageError(event: any): void {
+    console.error('❌ Image failed to load:', event.target.src);
+    event.target.src = 'assets/images/no-image.jpg';
+    event.target.alt = 'Imagen no disponible';
   }
 }

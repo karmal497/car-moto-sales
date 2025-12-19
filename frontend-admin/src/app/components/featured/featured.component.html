@@ -26,7 +26,10 @@
               <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
               <mat-cell *matCellDef="let item">
                 @if (item.image_url) {
-                  <img [src]="item.image_url | imageUrl" alt="{{item.title}}" class="table-image">
+                  <img [src]="item.image_url | imageUrl"
+                       alt="{{item.title}}"
+                       class="table-image"
+                       (error)="onImageError($event)">
                 } @else {
                   <div class="no-image">Sin imagen</div>
                 }
@@ -89,7 +92,10 @@
                 @for (car of cars; track car.id) {
                   <mat-card class="vehicle-card">
                     @if (car.image_url) {
-                      <img [src]="car.image_url | imageUrl" alt="{{car.brand}} {{car.model}}" class="vehicle-image">
+                      <img [src]="car.image_url | imageUrl"
+                           alt="{{car.brand}} {{car.model}}"
+                           class="vehicle-image"
+                           (error)="onImageError($event)">
                     } @else {
                       <div class="no-image">Sin imagen</div>
                     }
@@ -113,7 +119,10 @@
                 @for (motorcycle of motorcycles; track motorcycle.id) {
                   <mat-card class="vehicle-card">
                     @if (motorcycle.image_url) {
-                      <img [src]="motorcycle.image_url | imageUrl" alt="{{motorcycle.brand}} {{motorcycle.model}}" class="vehicle-image">
+                      <img [src]="motorcycle.image_url | imageUrl"
+                           alt="{{motorcycle.brand}} {{motorcycle.model}}"
+                           class="vehicle-image"
+                           (error)="onImageError($event)">
                     } @else {
                       <div class="no-image">Sin imagen</div>
                     }

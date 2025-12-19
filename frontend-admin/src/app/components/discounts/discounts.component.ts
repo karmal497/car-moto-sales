@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ImageUrlPipe } from '../../pipes/image-url.pipe';
+import { ImageUrlPipe } from '../../pipes/image-url.pipe'; // NUEVO
 
 @Component({
   selector: 'app-discounts',
@@ -32,7 +32,7 @@ import { ImageUrlPipe } from '../../pipes/image-url.pipe';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    ImageUrlPipe
+    ImageUrlPipe // NUEVO
   ]
 })
 export class DiscountsComponent implements OnInit {
@@ -69,7 +69,7 @@ export class DiscountsComponent implements OnInit {
     this.isLoading = true;
     this.apiService.getDiscounts().subscribe({
       next: (response: any) => {
-        // Usar los datos directamente del backend (ya vienen formateados)
+        console.log('💰 DISCOUNTS DATA:', response);
         this.discounts = response;
         this.isLoading = false;
       },
@@ -84,7 +84,6 @@ export class DiscountsComponent implements OnInit {
   loadAvailableVehicles(): void {
     this.apiService.getAvailableCarsForDiscount().subscribe({
       next: (response: any) => {
-        // Usar los datos directamente del backend
         this.cars = response;
       },
       error: (error) => {
@@ -95,7 +94,6 @@ export class DiscountsComponent implements OnInit {
 
     this.apiService.getAvailableMotorcyclesForDiscount().subscribe({
       next: (response: any) => {
-        // Usar los datos directamente del backend
         this.motorcycles = response;
       },
       error: (error) => {
@@ -154,7 +152,6 @@ export class DiscountsComponent implements OnInit {
       const formValue = this.discountForm.value;
       const discountPercentage = formValue.discount_percentage;
 
-      // Aplicar descuento a los vehículos seleccionados
       const discountPromises: any[] = [];
 
       this.selectedCars.forEach(car => {
@@ -237,5 +234,12 @@ export class DiscountsComponent implements OnInit {
 
   isMotorcycleSelected(motorcycle: any): boolean {
     return this.selectedMotorcycles.some(m => m.id === motorcycle.id);
+  }
+
+  // Método para manejar errores de imagen
+  onImageError(event: any): void {
+    console.error('❌ Image failed to load:', event.target.src);
+    event.target.src = 'assets/images/no-image.jpg';
+    event.target.alt = 'Imagen no disponible';
   }
 }

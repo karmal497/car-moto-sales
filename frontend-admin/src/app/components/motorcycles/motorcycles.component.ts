@@ -41,13 +41,21 @@ export class MotorcyclesComponent implements OnInit {
   }
 
   loadMotorcycles(): void {
+    this.isLoading = true;
     this.apiService.getMotorcycles().subscribe({
       next: (motorcycles) => {
+        console.log('🏍️ MOTORCYCLES DATA FROM API:', motorcycles);
+
+        if (motorcycles && motorcycles.length > 0) {
+          console.log('🔍 First motorcycle:', motorcycles[0]);
+          console.log('🖼️ First image_url:', motorcycles[0].image_url);
+        }
+
         this.motorcycles = motorcycles;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading motorcycles:', error);
+        console.error('❌ Error loading motorcycles:', error);
         this.isLoading = false;
       }
     });
@@ -74,5 +82,12 @@ export class MotorcyclesComponent implements OnInit {
         });
       }
     });
+  }
+
+  // Método para manejar errores de imagen
+  onImageError(event: any): void {
+    console.error('❌ Image failed to load:', event.target.src);
+    event.target.src = 'assets/images/no-image.jpg';
+    event.target.alt = 'Imagen no disponible';
   }
 }
