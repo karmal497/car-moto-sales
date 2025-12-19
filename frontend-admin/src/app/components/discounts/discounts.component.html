@@ -25,7 +25,7 @@
             <ng-container matColumnDef="image">
               <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
               <mat-cell *matCellDef="let item">
-                <img [src]="item.image_url" alt="{{item.title}}" class="table-image">
+                <img [src]="item.image_url | imageUrl" alt="{{item.title}}" class="table-image">
               </mat-cell>
             </ng-container>
 
@@ -98,7 +98,7 @@
                     [class.selected]="isCarSelected(car)"
                     (click)="toggleCarSelection(car)"
                     class="vehicle-card">
-                    <img [src]="car.image_url" alt="{{car.brand}} {{car.model}}" class="vehicle-image">
+                    <img [src]="car.image_url | imageUrl" alt="{{car.brand}} {{car.model}}" class="vehicle-image">
                     <mat-card-content>
                       <h4>{{car.brand}} {{car.model}} ({{car.year}})</h4>
                       <p>${{car.price | number:'1.0-0'}}</p>
@@ -116,7 +116,7 @@
                     [class.selected]="isMotorcycleSelected(motorcycle)"
                     (click)="toggleMotorcycleSelection(motorcycle)"
                     class="vehicle-card">
-                    <img [src]="motorcycle.image_url" alt="{{motorcycle.brand}} {{motorcycle.model}}" class="vehicle-image">
+                    <img [src]="motorcycle.image_url | imageUrl" alt="{{motorcycle.brand}} {{motorcycle.model}}" class="vehicle-image">
                     <mat-card-content>
                       <h4>{{motorcycle.brand}} {{motorcycle.model}} ({{motorcycle.year}})</h4>
                       <p>${{motorcycle.price | number:'1.0-0'}}</p>

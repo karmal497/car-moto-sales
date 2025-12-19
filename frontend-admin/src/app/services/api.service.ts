@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 })
 export class ApiService {
   private apiUrl = environment.apiUrl;
+  private baseUrl = environment.apiUrl.replace('/api', ''); // URL base sin /api
 
   constructor(
     private http: HttpClient,
@@ -29,6 +30,37 @@ export class ApiService {
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
+  }
+
+  // Método para construir URLs de imágenes completas
+  getImageUrl(imagePath: string): string {
+    if (!imagePath) return '';
+
+    // Si ya es una URL completa, devolverla tal cual
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // **CORRECCIÓN IMPORTANTE: Manejar rutas de medios de Django**
+    // En Django, las imágenes normalmente vienen como: /media/cars/imagen.jpg
+    // O como: media/cars/imagen.jpg
+    // Necesitamos construir la URL completa:
+    if (imagePath.startsWith('/media/') || imagePath.startsWith('media/')) {
+      // Si ya tiene /media, usar la URL base directamente
+      if (imagePath.startsWith('/')) {
+        return `${this.baseUrl}${imagePath}`;
+      } else {
+        return `${this.baseUrl}/${imagePath}`;
+      }
+    }
+
+    // Si es una ruta relativa, construir la URL completa
+    if (imagePath.startsWith('/')) {
+      return `${this.baseUrl}${imagePath}`;
+    }
+
+    // Para rutas relativas sin slash inicial
+    return `${this.baseUrl}/${imagePath}`;
   }
 
   // Cars
@@ -88,11 +120,11 @@ export class ApiService {
   }
 
   getCarById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/cars/${id}/`);
+    return this.http.get<any>(`${this.apiUrl}/cars/${id}/`, { headers: this.getHeaders() });
   }
 
   getMotorcycleById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/motorcycles/${id}/`);
+    return this.http.get<any>(`${this.apiUrl}/motorcycles/${id}/`, { headers: this.getHeaders() });
   }
 
   // Settings
